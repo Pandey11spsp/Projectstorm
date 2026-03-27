@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Storm Predictor — Innovaccer PMO</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f0;color:#1a1a18;min-height:100vh;padding:20px 16px}
+.wrap{max-width:780px;margin:0 auto}
+.topbar{background:#fff;border:1px solid #e0dfd7;border-radius:14px;padding:16px 20px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{width:38px;height:38px;border-radius:10px;background:#1a1a18;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round}
+.topinfo{flex:1}
+.toptitle{font-size:15px;font-weight:600;color:#1a1a18}
+.topsub{font-size:11px;color:#6b6a63;margin-top:1px}
+.topright{display:flex;gap:8px;align-items:center}
+.badge{font-size:11px;font-weight:600;padding:3px 9px;border-radius:6px;border:1px solid #e0dfd7;color:#6b6a63;background:#fff}
+.reset-btn{font-size:11px;font-weight:500;padding:5px 12px;border-radius:7px;border:1px solid #d3d1c7;background:#fff;color:#444441;cursor:pointer}
+.reset-btn:hover{background:#f5f5f0}
+.phase-sel{background:#fff;border:1px solid #e0dfd7;border-radius:14px;padding:14px 18px;margin-bottom:12px}
+.phase-sel-title{font-size:13px;font-weight:600;color:#1a1a18;margin-bottom:3px}
+.phase-sel-sub{font-size:11px;color:#6b6a63;margin-bottom:10px}
+.phase-btns{display:flex;gap:8px;flex-wrap:wrap}
+.pbtn{flex:1;min-width:140px;padding:11px 13px;border-radius:10px;border:1.5px solid #d3d1c7;background:#fff;cursor:pointer;text-align:left;transition:all .15s}
+.pbtn:hover{border-color:#b4b2a9;background:#faf9f5}
+.pbtn.ap{border-color:#378ADD;background:#E6F1FB}
+.pbtn.al{border-color:#3B6D11;background:#EAF3DE}
+.pbadge{display:inline-block;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;margin-bottom:3px}
+.pbp{background:#E6F1FB;color:#0C447C}
+.pbl{background:#EAF3DE;color:#27500A}
+.pbtitle{font-size:13px;font-weight:600;color:#1a1a18;display:block;margin-bottom:2px}
+.pbsub{font-size:11px;color:#6b6a63;line-height:1.4}
+.prog-wrap{background:#e8e7e0;border-radius:3px;height:3px;margin-bottom:12px}
+.prog-fill{height:3px;border-radius:3px;background:#378ADD;transition:width .3s}
+.dials{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:12px}
+.dial{background:#fff;border:1px solid #e0dfd7;border-radius:10px;padding:9px 7px;text-align:center}
+.dn{font-size:19px;font-weight:700;display:block;line-height:1.2}
+.dl{font-size:10px;color:#6b6a63;margin-top:1px}
+.mom{border-radius:10px;padding:9px 13px;margin-bottom:11px;display:flex;align-items:flex-start;gap:8px;font-size:12px;line-height:1.5}
+.mom-pos{background:#EAF3DE;border:1px solid #3B6D11;color:#27500A}
+.mom-neg{background:#FCEBEB;border:1px solid #A32D2D;color:#791F1F}
+.mom-neu{background:#f5f5f0;border:1px solid #e0dfd7;color:#6b6a63}
+.banner{border-radius:14px;padding:14px 18px;margin-bottom:12px}
+.b-clear{background:#EAF3DE;border:1px solid #3B6D11}
+.b-over{background:#FAEEDA;border:1px solid #BA7517}
+.b-storm{background:#FAEEDA;border:1px solid #854F0B}
+.b-thunder{background:#FCEBEB;border:1px solid #A32D2D}
+.b-wait{background:#f5f5f0;border:1px solid #d3d1c7}
+.b-na{background:#f5f5f0;border:1px solid #b4b2a9}
+.b-na .bn{color:#444441}.b-na .bs{color:#6b6a63}
+.bn{font-size:16px;font-weight:700;margin-bottom:3px}
+.b-clear .bn{color:#27500A}.b-over .bn{color:#BA7517}.b-storm .bn{color:#854F0B}.b-thunder .bn{color:#791F1F}.b-wait .bn{color:#6b6a63}
+.bs{font-size:12px;line-height:1.5}
+.b-clear .bs{color:#3B6D11}.b-over .bs,.b-storm .bs{color:#854F0B}.b-thunder .bs{color:#A32D2D}.b-wait .bs{color:#888780}
+.pbar-row{display:flex;align-items:center;gap:10px;margin-top:9px}
+.pbar-track{flex:1;height:7px;background:rgba(0,0,0,.1);border-radius:4px}
+.pbar-fill{height:7px;border-radius:4px;transition:width .5s,background .4s}
+.grp-lbl{font-size:10px;font-weight:700;letter-spacing:.08em;color:#888780;text-transform:uppercase;margin:13px 0 7px;display:flex;align-items:center;gap:8px}
+.grp-lbl::after{content:'';flex:1;height:1px;background:#e0dfd7}
+.qcard{background:#fff;border:1px solid #e0dfd7;border-radius:12px;padding:12px 14px;margin-bottom:7px}
+.qcard.dg{border-left:4px solid #639922;border-top-left-radius:0;border-bottom-left-radius:0}
+.qcard.dy{border-left:4px solid #BA7517;border-top-left-radius:0;border-bottom-left-radius:0}
+.qcard.da{border-left:4px solid #854F0B;border-top-left-radius:0;border-bottom-left-radius:0}
+.qcard.dr{border-left:4px solid #A32D2D;border-top-left-radius:0;border-bottom-left-radius:0}
+.qcard.dna{border-left:4px solid #b4b2a9;border-top-left-radius:0;border-bottom-left-radius:0;opacity:.65}
+.qcard.amped{outline:2px solid #F09595}
+.qcard.mited{outline:2px solid #C0DD97}
+.qmeta{display:flex;align-items:center;gap:5px;margin-bottom:4px;flex-wrap:wrap}
+.qnum{font-size:10px;font-weight:600;color:#888780}
+.qtag{font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px}
+.t1{background:#E6F1FB;color:#0C447C}.t2{background:#EEEDFE;color:#3C3489}
+.t3{background:#E1F5EE;color:#085041}.t4{background:#FAEEDA;color:#633806}
+.t5{background:#FCEBEB;color:#791F1F}
+.sigtag{font-size:9px;padding:1px 6px;border-radius:4px;margin-left:auto;font-weight:600}
+.s1{background:#E6F1FB;color:#0C447C}.s2{background:#E1F5EE;color:#085041}
+.s3{background:#FAEEDA;color:#633806}.s4{background:#EEEDFE;color:#3C3489}
+.s5{background:#FCEBEB;color:#791F1F}
+.wpill{font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;border:1px solid;margin-left:4px}
+.wp-n{background:#f5f5f0;border-color:#d3d1c7;color:#444441}
+.wp-h{background:#FCEBEB;border-color:#A32D2D;color:#A32D2D}
+.wp-l{background:#EAF3DE;border-color:#3B6D11;color:#27500A}
+.qt{font-size:13px;font-weight:600;color:#1a1a18;line-height:1.4;margin-bottom:4px}
+.qh{font-size:11px;color:#6b6a63;line-height:1.5;margin-bottom:8px;padding:5px 9px;background:#f5f5f0;border-radius:6px;border-left:3px solid #d3d1c7}
+.qbtns{display:flex;flex-direction:column;gap:5px}
+.qbtn{font-size:12px;padding:8px 11px;border-radius:8px;border:1px solid #d3d1c7;background:#fff;color:#444441;cursor:pointer;line-height:1.4;text-align:left;display:flex;align-items:center;gap:9px}
+.qbtn:hover{background:#f5f5f0}
+.dot{width:11px;height:11px;border-radius:50%;border:1.5px solid #d3d1c7;flex-shrink:0}
+.qbtn.sel-g{background:#EAF3DE;border-color:#3B6D11;font-weight:600}.qbtn.sel-g .dot{background:#639922;border-color:#3B6D11}
+.qbtn.sel-y{background:#FAEEDA;border-color:#BA7517;font-weight:600}.qbtn.sel-y .dot{background:#BA7517;border-color:#854F0B}
+.qbtn.sel-a{background:#FAEEDA;border-color:#854F0B;font-weight:600}.qbtn.sel-a .dot{background:#854F0B;border-color:#633806}
+.qbtn.sel-r{background:#FCEBEB;border-color:#A32D2D;font-weight:600}.qbtn.sel-r .dot{background:#A32D2D;border-color:#791F1F}
+.qbtn.sel-na{background:#f5f5f0;border-color:#888780;font-weight:600;color:#6b6a63}.qbtn.sel-na .dot{background:#b4b2a9;border-color:#888780}
+.qbtn.dim{opacity:.35}
+.na-divider{height:1px;background:#e8e7e0;margin:3px 0}
+.ctx-note{font-size:11px;padding:5px 9px;border-radius:5px;margin-top:5px;line-height:1.4;display:flex;align-items:flex-start;gap:6px}
+.cn-amp{background:#FCEBEB;color:#791F1F;border:1px solid #F09595}
+.cn-mit{background:#EAF3DE;color:#27500A;border:1px solid #C0DD97}
+.cn-insight-amp{background:#FAEEDA;color:#633806;border:1px solid #FAC775}
+.cn-insight-mit{background:#EAF3DE;color:#27500A;border:1px solid #9FE1CB}
+.why{font-size:11px;color:#888780;margin-top:5px;padding-top:5px;border-top:1px solid #f0efe8;line-height:1.4}
+.res-block{background:#fff;border:1px solid #e0dfd7;border-radius:14px;padding:16px 18px;margin-top:10px}
+.fhd{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin:10px 0 4px}
+.fhd-r{color:#A32D2D}.fhd-a{color:#854F0B}.fhd-g{color:#27500A}
+.fit{font-size:12px;padding:4px 0;border-bottom:1px solid #f0efe8;line-height:1.4;color:#1a1a18}
+.fit:last-child{border:none}
+.no-phase{text-align:center;padding:36px 20px;color:#888780;font-size:13px}
+.footer{text-align:center;font-size:11px;color:#888780;margin-top:16px;padding:13px;border-top:1px solid #e0dfd7}
+/* ── Branch styles ── */
+.branch-wrap{margin-top:10px;padding:10px 12px;background:#f9f8f4;border-radius:9px;border:1px solid #e0dfd7;border-top:2px solid #d3d1c7}
+.branch-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#888780;margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.branch-lbl::after{content:'';flex:1;height:1px;background:#e0dfd7}
+.branch-mode-q{font-size:12px;font-weight:600;color:#1a1a18;margin-bottom:8px;line-height:1.4}
+.branch-mode-row{display:flex;gap:8px;margin-bottom:10px}
+.b-mode-btn{flex:1;font-size:12px;padding:10px 12px;border-radius:9px;border:1.5px solid #d3d1c7;background:#fff;color:#444441;cursor:pointer;text-align:left;transition:all .15s;line-height:1.4}
+.b-mode-btn:hover{border-color:#b4b2a9;background:#faf9f5}
+.b-mode-btn.bm-single{border-color:#378ADD;background:#E6F1FB}
+.b-mode-btn.bm-phased{border-color:#534AB7;background:#EEEDFE}
+.b-mode-lbl{font-size:10px;font-weight:700;letter-spacing:.04em;display:block;margin-bottom:2px}
+.b-mode-lbl-s{color:#185FA5}.b-mode-lbl-p{color:#3C3489}
+.b-mode-lbl-off{color:#888780}
+.branch-sub{border-radius:8px;padding:10px 12px}
+.branch-sub-single{background:#EAF0FA;border:1px solid #B5D4F4;border-left:3px solid #378ADD}
+.branch-sub-phased{background:#F0EFF9;border:1px solid #CECBF6;border-left:3px solid #7F77DD}
+.branch-sub-q{font-size:12px;font-weight:600;color:#1a1a18;margin-bottom:6px;line-height:1.4}
+.branch-sub-h{font-size:11px;line-height:1.5;margin-bottom:8px;padding:4px 8px;border-radius:5px}
+.bsh-single{background:rgba(55,138,221,0.09);color:#185FA5}
+.bsh-phased{background:rgba(127,119,221,0.09);color:#3C3489}
+.branch-opts{display:flex;flex-direction:column;gap:4px}
+@media(max-width:520px){.dials{grid-template-columns:repeat(3,1fr)}.sigtag{display:none}.branch-mode-row{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="topbar">
+  <div class="logo"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+  <div class="topinfo">
+    <div class="toptitle">Project storm predictor</div>
+    <div class="topsub">Innovaccer PMO · Weather overcast method · Smart context logic v6.1 · Every Monday</div>
+  </div>
+  <div class="topright">
+    <span class="badge" id="ac">Select phase</span>
+    <button class="reset-btn" onclick="init()">Reset</button>
+  </div>
+</div>
+
+<div class="phase-sel">
+  <div class="phase-sel-title">Step 1 — Select your project phase</div>
+  <div class="phase-sel-sub">Signals, scoring, and all context logic adapt based on your phase.</div>
+  <div class="phase-btns">
+    <button class="pbtn" id="pb-p" onclick="setPhase('p')">
+      <span class="pbadge pbp">PRE-LIVE</span>
+      <span class="pbtitle">Stage / Initial phase</span>
+      <span class="pbsub">Development, testing, UAT, staging, or pilot. Not yet on production with real users.</span>
+    </button>
+    <button class="pbtn" id="pb-l" onclick="setPhase('l')">
+      <span class="pbadge pbl">LIVE</span>
+      <span class="pbtitle">Live on production</span>
+      <span class="pbsub">Running on production with real users. Client sees platform health in real time.</span>
+    </button>
+  </div>
+</div>
+
+<div class="prog-wrap"><div class="prog-fill" id="pg" style="width:0%"></div></div>
+<div class="dials">
+  <div class="dial"><span class="dn" id="dg" style="color:#27500A">—</span><div class="dl">Green</div></div>
+  <div class="dial"><span class="dn" id="dy" style="color:#BA7517">—</span><div class="dl">Yellow</div></div>
+  <div class="dial"><span class="dn" id="da" style="color:#854F0B">—</span><div class="dl">Amber</div></div>
+  <div class="dial"><span class="dn" id="dr" style="color:#A32D2D">—</span><div class="dl">Red</div></div>
+  <div class="dial"><span class="dn" id="ds">—</span><div class="dl">Score</div></div>
+</div>
+<div class="mom mom-neu" id="mom"><span style="font-size:14px;flex-shrink:0">—</span><span id="mom-txt">Select phase above to begin</span></div>
+<div class="banner b-wait" id="bn">
+  <div class="bn" id="bnt">Select project phase to load signals</div>
+  <div class="bs" id="bns">Trend direction, root cause, and recovery signals all factor into each score.</div>
+  <div class="pbar-row"><span style="font-size:11px;color:#6b6a63;white-space:nowrap">Atmospheric pressure</span><div class="pbar-track"><div class="pbar-fill" id="pf" style="width:0%"></div></div><span style="font-size:12px;font-weight:700;color:#1a1a18;min-width:52px;text-align:right" id="ps">—</span></div>
+</div>
+<div id="qc"></div>
+<div class="footer">Innovaccer PMO · Project Health Framework · v6.1 · Smart context scoring + N/A support</div>
+</div>
+
+<script>
+var PH=null, S={};
+var SC={g:3,y:2,a:1,r:0};
+
+/* ═══════════════════════ SIGNAL 7 BRANCH DATA ═══════════════════════ */
+var P5B={
+  modeQ:'How is the client delivering data feeds to the team?',
+  single:{
+    label:'All feeds — one-go',
+    desc:'Single batch handover of all feeds',
+    getSubQ:function(m){
+      if(m==='g') return 'Feeds marked available — confirm the one-go handover is fully complete and validated end-to-end.';
+      if(m==='y') return 'One feed is missing — has a formal written escalation with a deadline been sent to the client?';
+      if(m==='a') return 'Multiple feeds missing and only informally chased — has the one-go handover even formally started?';
+      return 'No feeds received — does the client acknowledge the handover is overdue, or are they unresponsive?';
+    },
+    getHint:function(m){
+      if(m==='g') return 'Received ≠ confirmed. Confirmed = field mapping complete, end-to-end pipeline tested, and team has built and validated against real data. Even a "green" one-go should be verified at this level before closing the risk.';
+      if(m==='y') return 'One-go means all-or-nothing. A missing feed blocks the whole handover. Formal written escalation with a stated deadline creates client accountability — a verbal chase does not. Without a deadline on record, the client has no signal that the delay is urgent.';
+      if(m==='a') return 'Informal chasing on a one-go delivery creates indefinite waiting. The client has no accountability signal without a formal written escalation. One-go delays that are chased informally tend to slip repeatedly — each "follow-up" resets the clock without fixing anything.';
+      return 'A one-go handover that has not started = the team has zero data. This is the highest-risk feed scenario because there is no partial progress to build on. The critical split: does the client acknowledge the delay or are they avoiding it entirely? The answer determines whether escalation to leadership is needed.';
+    },
+    opts:[
+      {v:'g',t:'Complete — all feeds received, fully field-mapped and tested end-to-end with no gaps'},
+      {v:'y',t:'Received but not fully validated — feeds arrived, field mapping or pipeline testing still open'},
+      {v:'a',t:'Partial — some feeds received, remainder have no confirmed delivery date from client'},
+      {v:'r',t:'Not started — client has not initiated the handover at all, team is building on assumptions'}
+    ]
+  },
+  phased:{
+    label:'Feeds in phases',
+    desc:'Incremental delivery across milestones',
+    getSubQ:function(m){
+      if(m==='g') return 'Feeds marked available — confirm each completed phase is tested and the next phase has a formally confirmed date.';
+      if(m==='y') return 'A phase is delayed — does the client have a formally confirmed revised delivery date for the next phase?';
+      if(m==='a') return 'Phases slipping informally — is there any signed-off revised plan, or is the timeline now undefined?';
+      return 'Phase plan appears collapsed — can the team see when any remaining phases will arrive?';
+    },
+    getHint:function(m){
+      if(m==='g') return '"Phase 1 done" is only safe if Phase 2 has a formally confirmed client date — not just a verbal mention. A phased plan without confirmed future dates gives false confidence: the team plans their build around a schedule that may not exist.';
+      if(m==='y') return 'Verbal next-phase dates dissolve when the client\'s internal priorities shift. The team cannot reliably schedule build or test windows against an unconfirmed date. One formal written confirmation from the client converts a risk into a commitment.';
+      if(m==='a') return 'A phased plan that is slipping without a revised timeline has no recovery mechanism. The PM is managing delivery against a schedule that is no longer real. A new formal plan — with revised dates signed off by the client — is the only thing that unblocks this.';
+      return 'A collapsed phase plan is more dangerous than a delayed one-go delivery. It creates the illusion of progress (some phases delivered) while hiding that remaining phases are entirely undefined. The team does not know what they do not have — and cannot plan around it.';
+    },
+    opts:[
+      {v:'g',t:'On track — current phase complete and tested, next phase has a formally confirmed client delivery date'},
+      {v:'y',t:'Current phase done but next phase is verbal only — date discussed, not formally confirmed in writing'},
+      {v:'a',t:'Behind on current phase — client has not confirmed a revised handover date, timeline is drifting'},
+      {v:'r',t:'Phase plan collapsed — client unresponsive on remaining phases, team has no visibility into future delivery'}
+    ]
+  }
+};
+
+/* ── Feed risk matrix ── */
+function getFeedRiskLevel(mainAns, mode, subAns){
+  if(!mode||!subAns) return null;
+  var m=mainAns, s=subAns;
+  if(m==='g'&&s==='g') return{level:'Low',col:'#27500A',bg:'#EAF3DE',bc:'#3B6D11'};
+  if((m==='g'&&s==='y')||(m==='y'&&s==='g')) return{level:'Low–Medium',col:'#3B6D11',bg:'#EAF3DE',bc:'#639922'};
+  if(m==='y'&&s==='y') return{level:'Medium',col:'#633806',bg:'#FAEEDA',bc:'#BA7517'};
+  if((m==='y'&&s==='a')||(m==='a'&&s==='y')) return{level:'Medium–High',col:'#854F0B',bg:'#FAEEDA',bc:'#854F0B'};
+  if((m==='a'&&s==='a')||(m==='r'&&s==='y')) return{level:'High',col:'#791F1F',bg:'#FCEBEB',bc:'#A32D2D'};
+  if((m==='a'&&s==='r')||(m==='r'&&s==='a')) return{level:'High',col:'#791F1F',bg:'#FCEBEB',bc:'#A32D2D'};
+  if(m==='r'&&s==='r') return{level:'Critical',col:'#501313',bg:'#FCEBEB',bc:'#791F1F'};
+  return{level:'Medium',col:'#633806',bg:'#FAEEDA',bc:'#BA7517'};
+}
+
+/* ── Cross-signal intelligence for Signal 7 ── */
+function getP5CrossSignals(mainAns, mode, subAns){
+  var alerts=[];
+  var p2=S['p2'],p9=S['p9'],p6=S['p6'],p8=S['p8'],p14=S['p14'];
+  var isBad=(mainAns==='a'||mainAns==='r');
+
+  if(isBad&&p9==='r')
+    alerts.push({sev:'r',msg:'Client unresponsive (Signal 11) + feeds missing — escalation path is structurally blocked. The only person who can provide the feeds is also not responding. Leadership escalation cannot wait.'});
+  if(isBad&&p2==='r')
+    alerts.push({sev:'r',msg:'Delivery slipping (Signal 2) + feeds missing — team cannot build or test AND is already behind. Two pipelines broken simultaneously. Go-live is at serious risk without immediate feed resolution.'});
+  if(isBad&&p8==='r')
+    alerts.push({sev:'a',msg:'Client sentiment worsening (Signal 10) + feeds not delivered — a disengaging client is less likely to prioritise escalated feed requests. Relationship deterioration makes feed resolution harder, not easier.'});
+  if(isBad&&p6==='r')
+    alerts.push({sev:'a',msg:'Internal teams also blocked (Signal 8) + feeds missing — external feed gap is compounding with internal dependency delays. The team is waiting from multiple directions simultaneously.'});
+  if(isBad&&p14==='r')
+    alerts.push({sev:'a',msg:'PM is reactive (Signal 14) + feeds missing — a PM in firefighting mode is less likely to execute the structured escalation that a missing feed situation demands.'});
+  if(!isBad&&p9==='g'&&(mainAns==='y'))
+    alerts.push({sev:'g',msg:'Client is responsive (Signal 11) — a missing feed with a responsive client is a manageable situation. Formal escalation is more likely to succeed quickly.'});
+  return alerts;
+}
+
+/* ── Action recommendation ── */
+function getP5Action(mainAns, mode, subAns){
+  if(!mode||!subAns) return null;
+  var m=mainAns,s=subAns;
+  if(s==='g') return null;
+  if(mode==='single'){
+    if(s==='y') return 'Action: Close the field mapping and pipeline testing gaps before treating feeds as build-ready. Do not build features on untested data — silent data errors are harder to catch than missing feeds.';
+    if(s==='a') return 'Action: Send a formal written escalation to the client today with a specific delivery deadline and a documented statement of impact. Verbal follow-up has not worked — written escalation with a stated go-live risk creates the accountability signal needed.';
+    if(s==='r') return 'Action: Escalate to CSD or account leadership immediately. The one-go handover has not started — this is no longer a PM-level follow-up situation. A leadership-to-leadership call with a formal deadline is the only lever that works at this stage.';
+  }
+  if(mode==='phased'){
+    if(s==='y') return 'Action: Convert the verbal next-phase date to a written commitment before this sprint closes. One email confirmation from the client converts an assumption into a schedule the team can actually build against.';
+    if(s==='a') return 'Action: Do not continue build planning against the original phase dates — they are no longer valid. Request a formal revised phase plan from the client with new dates. Without it, the team\'s build schedule is fictional.';
+    if(s==='r') return 'Action: Escalate to leadership. A collapsed phase plan with an unresponsive client cannot be resolved through PM follow-up. The escalation must include a formal documented statement of impact on go-live and require a response within a defined window.';
+  }
+  return null;
+}
+
+/* ── Resolution matrix: main × sub → effective score for p5 ──
+   Sub-answer is a deeper diagnostic — it can worsen OR partially recover the main signal.
+   Branch green lifts: red→amber, amber→yellow (never fully overrides a bad main)
+   Branch worse than main: always takes effect immediately
+──────────────────────────────────────────────────────────────── */
+var P5_MATRIX={
+  g:{g:'g', y:'y', a:'a', r:'r'},
+  y:{g:'y', y:'y', a:'a', r:'r'},
+  a:{g:'y', y:'a', a:'a', r:'r'},
+  r:{g:'a', y:'r', a:'r', r:'r'}
+};
+function resolveP5(main, mode, sub){
+  if(!main||main==='n') return main;
+  var s = mode==='single' ? S['p5_single'] : mode==='phased' ? S['p5_phased'] : null;
+  if(!mode||!s) return main; // no branch selected yet — use main as-is
+  return P5_MATRIX[main][s] || main;
+}
+
+/* Smart insight: mode + main + sub */
+function p5Insight(mainAns,mode,subAns){
+  if(!mode||!subAns) return null;
+  if(mode==='single'){
+    if(subAns==='r'&&(mainAns==='r'||mainAns==='a'))
+      return{type:'amp',msg:'One-go handover has not started AND main signal is '+(mainAns==='r'?'Red':'Amber')+' — the team has zero data to build or test against. All-or-nothing delivery that hasn\'t begun is the highest possible feed risk.'};
+    if(subAns==='a'&&mainAns==='r')
+      return{type:'amp',msg:'Partial one-go receipt AND Red main signal — team is building on incomplete data while missing the formal escalation needed to get the rest. Partial feeds are more dangerous than none: they create false confidence in the build.'};
+    if(subAns==='y'&&(mainAns==='a'||mainAns==='r'))
+      return{type:'amp',msg:'Feeds received but not validated AND main signal is '+(mainAns==='r'?'Red':'Amber')+' — untested feeds are not usable feeds. Build quality is dependent on data that has not been confirmed to be correct.'};
+    if(subAns==='y'&&mainAns==='y')
+      return{type:'amp',msg:'Feed received but validation gaps remain — field mapping or pipeline testing is open. The team is one wrong assumption away from building features that silently fail on real data.'};
+    if(subAns==='g')
+      return{type:'mit',msg:'One-go delivery confirmed complete and fully tested — feed risk for this signal is resolved. No further action needed on data availability.'};
+  }
+  if(mode==='phased'){
+    if(subAns==='r'&&(mainAns==='r'||mainAns==='a'))
+      return{type:'amp',msg:'Phase plan collapsed AND main signal is '+(mainAns==='r'?'Red':'Amber')+' — team cannot see when remaining feeds will arrive. Phased delivery creates an illusion of progress when future phases are undefined.'};
+    if(subAns==='a'&&(mainAns==='a'||mainAns==='r'))
+      return{type:'amp',msg:'Phase behind with no revised plan — the team is planning build and test windows against a schedule that no longer exists. Every sprint planned on an undefined phase date is wasted planning effort.'};
+    if(subAns==='y')
+      return{type:'amp',msg:'Next phase verbally committed only — verbal phase dates are not commitments. They dissolve the moment the client\'s internal priorities shift, leaving the team without a build window.'};
+    if(subAns==='g')
+      return{type:'mit',msg:'Phased delivery on track with confirmed dates — structured phased delivery with formal client commitments is the lowest-risk feed arrangement. Risk is contained as long as confirmations remain formal.'};
+  }
+  return null;
+}
+
+/* ═══════════════════════ ADVANCED INTELLIGENCE ENGINE ═══════════════════════ */
+function objVals(o){var v=[];for(var k in o){if(o.hasOwnProperty(k))v.push(o[k]);}return v;}
+
+/* Group-level health — each signal group gets an independent RAG */
+function getGroupHealth(qs){
+  var grps={};
+  qs.forEach(function(q){
+    var a=S[q.id];if(!a||a==='n')return;
+    if(!grps[q.grp])grps[q.grp]={r:0,a:0,y:0,g:0,n:0};
+    grps[q.grp][a]=(grps[q.grp][a]||0)+1;
+    grps[q.grp].n++;
+  });
+  var out={};
+  Object.keys(grps).forEach(function(g){
+    var d=grps[g],lv;
+    if(d.r>=2||(d.r>=1&&d.a>=2))lv='r';
+    else if(d.r>=1||d.a>=2)lv='a';
+    else if(d.a>=1||d.y>=2)lv='y';
+    else lv='g';
+    out[g]={level:lv,r:d.r,a:d.a,y:d.y,g:d.g,n:d.n};
+  });
+  return out;
+}
+
+/* Yellow cluster — 2+ yellows in same group = concentrated drift */
+function getYellowClusters(qs){
+  var grpY={},grpN={};
+  qs.forEach(function(q){
+    var a=S[q.id];if(!a||a==='n')return;
+    grpN[q.grp]=(grpN[q.grp]||0)+1;
+    if(a==='y')grpY[q.grp]=(grpY[q.grp]||0)+1;
+  });
+  var cls=[];
+  Object.keys(grpY).forEach(function(g){if(grpY[g]>=2)cls.push({grp:g,count:grpY[g],total:grpN[g]||0});});
+  return cls;
+}
+
+/* Named pattern library — detects dangerous and positive multi-signal combinations */
+function detectPatterns(ph){
+  var pts=[];
+  var r=function(id){return S[id]==='r';};
+  var a=function(id){return S[id]==='a';};
+  var y=function(id){return S[id]==='y';};
+  var g=function(id){return S[id]==='g';};
+  var bad=function(id){return r(id)||a(id);};
+  var watch=function(id){return y(id)||a(id);};
+
+  if(ph==='p'){
+    /* ── CRITICAL ── */
+    if(r('p8')&&r('p9')&&bad('p10'))
+      pts.push({sev:'r',name:'Relationship cliff',desc:'Client sentiment, responsiveness, and requirement stability are all critical — the client relationship has structurally broken down. UAT sign-off and go-live are both at serious risk without immediate relationship intervention.'});
+    if(r('p14')&&r('p15'))
+      pts.push({sev:'r',name:'Governance collapse',desc:'PM is fully reactive AND stale high-impact risks sit unmanaged — the project is self-governing. These risks will surface unchecked at go-live when it is too late to address them.'});
+    if(r('p5')&&r('p9'))
+      pts.push({sev:'r',name:'Escalation dead-end',desc:'Data feeds missing AND client unresponsive — the client who owns the feeds is also unreachable. There is no functional escalation path available at PM level. This requires a leadership-to-leadership call today.'});
+    if(r('p2')&&r('p7')&&bad('p3'))
+      pts.push({sev:'r',name:'Resource death spiral',desc:'Delivery slipping, structural resource crunch, and unplanned work rising simultaneously — capacity shrinks while demand grows every sprint. Sprint planning cannot fix this; only leadership removing a competing project can.'});
+    if(r('p13')&&(r('p9')||r('p8')))
+      pts.push({sev:'r',name:'UAT void',desc:'UAT not confirmed AND the client relationship is deteriorating — there is no quality gate before go-live, and the client who must provide one is disengaged or unresponsive. Go-live will surface surprises the team had no chance to catch.'});
+    if(r('p16')&&r('p4')&&bad('p2'))
+      pts.push({sev:'r',name:'Timeline illusion',desc:'No go-live date, scope still changing, and delivery already slipping — the project has no destination, no stable scope, and no forward momentum. A full re-baseline conversation with leadership is overdue.'});
+    if(r('p1')&&r('p10')&&bad('p2'))
+      pts.push({sev:'r',name:'Perpetual rework',desc:'Requirements unclear AND client changing scope AND delivery slipping — the team is building, rebuilding, and falling behind simultaneously. There is no stable build state for the team to hold.'});
+    if(r('p4c')&&r('p2')&&bad('p7'))
+      pts.push({sev:'r',name:'Key person departure risk',desc:'Critical team member at risk AND delivery already slipping AND resource crunch — losing this person now would make recovery nearly impossible. The risk is invisible until it triggers.'});
+
+    /* ── WARNING ── */
+    if(!r('p8')&&bad('p8')&&bad('p9'))
+      pts.push({sev:'a',name:'Client drift',desc:'Client sentiment and responsiveness both declining but not yet critical — early deterioration forming. Act now before this hardens into the Relationship Cliff pattern, which is much harder to reverse.'});
+    if(bad('p1')&&bad('p2')&&bad('p3'))
+      pts.push({sev:'a',name:'Build instability',desc:'Requirements unclear, delivery slipping, and unplanned work rising — the build phase has no stable foundation. Every sprint compounds both the technical debt and the delivery gap.'});
+    if(bad('p12')&&bad('p13'))
+      pts.push({sev:'a',name:'Quality debt',desc:'Bug backlog growing AND UAT commitment is weak — quality is deteriorating with no gate planned to catch it before go-live. These two signals together reliably predict a painful launch.'});
+    if(bad('p14')&&bad('p11'))
+      pts.push({sev:'a',name:'Meeting churn',desc:'PM is reactive AND the same topics are recurring in meetings — the PM has no bandwidth to resolve issues between calls, so they surface again every meeting. Governance has effectively stalled.'});
+    if(watch('p8')&&watch('p9')&&watch('p16'))
+      pts.push({sev:'a',name:'Launch alignment risk',desc:'Client sentiment, responsiveness, and go-live date alignment are all Yellow or Amber — the three signals most predictive of a contested go-live are all under pressure simultaneously.'});
+    if(bad('p6')&&bad('p7'))
+      pts.push({sev:'a',name:'Dependency crunch',desc:'Internal teams blocking AND resource crunch simultaneously — the team is understaffed and also waiting on others. Sprint capacity is being eroded from both directions at once.'});
+    if(bad('p15')&&bad('p16'))
+      pts.push({sev:'a',name:'Go-live threat cluster',desc:'Stale high-impact risks AND go-live date not on track — the project is carrying unmitigated threats AND has no confirmed destination. The go-live risks have no one managing them toward a deadline.'});
+
+    /* ── POSITIVE ── */
+    if(g('p8')&&g('p13')&&g('p16'))
+      pts.push({sev:'g',name:'Launch ready',desc:'Client engaged, UAT formally confirmed, and go-live date on track — the three most critical pre-live gates are all green. Strong position heading into launch.'});
+    if(g('p2')&&g('p7')&&g('p1'))
+      pts.push({sev:'g',name:'Build momentum',desc:'Requirements stable, delivery on track, and no resource crunch — the build phase has a solid foundation. The team is building the right thing at the right pace.'});
+    if(g('p8')&&g('p9')&&g('p16'))
+      pts.push({sev:'g',name:'Client alignment strong',desc:'Client sentiment, responsiveness, and go-live date alignment are all green — the three relationship signals most predictive of a smooth launch are all healthy.'});
+    if(g('p5')&&g('p6')&&g('p7'))
+      pts.push({sev:'g',name:'Dependencies clear',desc:'Data feeds available, internal teams responsive, and no resource crunch — all dependency signals green. The team can build and test without external blockers.'});
+  }
+
+  if(ph==='l'){
+    /* ── CRITICAL ── */
+    if(r('l1')&&r('l8')&&r('l5'))
+      pts.push({sev:'r',name:'Platform crisis',desc:'Platform deteriorating, client unhappy, AND data feeds failing — three client-visible failures converging simultaneously. Formal escalation is imminent. This combination triggers rapid client disengagement.'});
+    if(r('l14')&&r('l15')&&r('l1'))
+      pts.push({sev:'r',name:'Governance void',desc:'PM reactive, stale high-impact risks, AND platform deteriorating — the project is generating incidents faster than anyone is governing them. Risks will activate before anyone has time to mitigate.'});
+    if(r('l7')&&r('l6')&&r('l2'))
+      pts.push({sev:'r',name:'Double bottleneck',desc:'Resource crunch, internal teams blocked, AND delivery slipping — the team is understaffed, waiting from multiple directions, and behind on commitments. Leadership intervention is the only resolution.'});
+    if(r('l8')&&r('l9')&&r('l10'))
+      pts.push({sev:'r',name:'Relationship breakdown',desc:'Client sentiment, responsiveness, and change request type all Red — the client is dissatisfied, disengaging, and demanding rework. Formal escalation is very close. Immediate executive engagement is needed.'});
+    if(r('l1')&&r('l12')&&r('l7'))
+      pts.push({sev:'r',name:'Quality spiral',desc:'Platform deteriorating, systemic bugs, AND no capacity to address root causes — engineering is applying band-aid fixes while new incidents generate from unresolved structural problems.'});
+    if(r('l4c')&&r('l1')&&bad('l7'))
+      pts.push({sev:'r',name:'Key person departure risk',desc:'Critical team member at risk AND platform deteriorating AND resource crunch — losing this person now would remove the only person capable of stabilising the platform.'});
+
+    /* ── WARNING ── */
+    if(bad('l1')&&bad('l3')&&bad('l7'))
+      pts.push({sev:'a',name:'Production spiral',desc:'Platform worsening, unplanned work rising, and resource pressure — production is consuming the engineering capacity that should be preventing the next production issue. Self-amplifying pattern.'});
+    if(bad('l8')&&bad('l9')&&!r('l8'))
+      pts.push({sev:'a',name:'Client cooling',desc:'Client sentiment and responsiveness both declining — early relationship deterioration forming. Act before this becomes the Relationship Breakdown pattern, which is far harder to reverse.'});
+    if(bad('l12')&&bad('l1'))
+      pts.push({sev:'a',name:'Quality erosion',desc:'Platform instability AND recurring bugs in the same components — structural quality issues are driving visible instability. Individual bug fixes will not stop this pattern; root cause investigation is needed.'});
+    if(bad('l14')&&bad('l11'))
+      pts.push({sev:'a',name:'Governance drift',desc:'PM reactive AND same topics recurring in meetings — no bandwidth to resolve issues between calls. Governance has stalled; problems are managed in meetings but fixed nowhere.'});
+    if(bad('l5')&&bad('l9'))
+      pts.push({sev:'a',name:'Feed escalation blocked',desc:'Data feeds failing AND client selectively unresponsive — the client who owns the broken feeds is also avoiding the conversation about fixing them. Deliberate avoidance is forming.'});
+    if(bad('l15')&&bad('l1'))
+      pts.push({sev:'a',name:'Latent incident risk',desc:'Stale high-impact risks AND platform already deteriorating — some of those unmitigated risks may already be contributing to current instability. They will activate on the next bad day.'});
+
+    /* ── POSITIVE ── */
+    if(g('l8')&&g('l4b')&&g('l1'))
+      pts.push({sev:'g',name:'Strong position',desc:'Platform stable, client happy, and high CSAT — the three strongest live-project health signals are all green. Actively protect this combination; it is the hardest to rebuild once lost.'});
+    if(g('l2')&&g('l1')&&g('l7'))
+      pts.push({sev:'g',name:'Delivery excellence',desc:'Platform stable, delivery on track, and no resource crunch — the operational foundation that sustains high CSAT over the long term.'});
+    if(g('l8')&&g('l9')&&g('l10'))
+      pts.push({sev:'g',name:'Client thriving',desc:'Client sentiment, responsiveness, and change request type all positive — the strongest commercial signal in this framework. Upsell and expansion conversations are well-timed now.'});
+    if(g('l14')&&g('l15'))
+      pts.push({sev:'g',name:'Governance strong',desc:'PM proactive AND risk register clean — governance is ahead of the project. Known threats are being managed before they can activate.'});
+  }
+  return pts;
+}
+
+var SIGNALS={
+p:[
+{id:'p1',grp:'Build & requirements',tag:'Build',tc:'t1',sig:'s1',sl:'Pressure',w:3,
+ q:'Are product requirements stable, testable, and genuinely understood by the team?',
+ h:'Being "defined" is not enough. Requirements must be stable (not changing every sprint), testable (team can write acceptance criteria), and shared understanding confirmed — not just documented somewhere. Ask: did the last feature get built correctly on first attempt?',
+ o:['Stable, testable, and genuinely understood — last few features built correctly without rework','Mostly clear with minor gaps — team proceeds confidently, occasional small clarification needed','Partially clear and/or changing frequently — team makes assumptions that sometimes turn out wrong','Unclear, unstable, or contested — team regularly builds the wrong thing or requirements shift mid-sprint'],
+ v:['g','y','a','r'],
+ amp:[{sid:'p2',val:'r',bonus:1,msg:'Delivery already slipping AND requirements unstable — team is building the wrong things faster. Rework is guaranteed.'},{sid:'p9',val:'r',bonus:1,msg:'Client unresponsive AND requirements unclear — there is no way to get clarity. This is a build-on-quicksand situation.'},{sid:'p10',val:'r',bonus:1,msg:'Frequent scope changes AND unclear requirements — requirements are both wrong and keep moving. Highest rework risk.'}],
+ mit:[{sid:'p8',val:'g',reduce:1,msg:'Client is actively engaged — gaps can be clarified quickly when the client is responsive and invested.'}],
+ why:'Requirements that look defined but are actually ambiguous are more dangerous than openly unknown ones — the team builds confidently in the wrong direction.'},
+
+{id:'p2',grp:'Build & requirements',tag:'Delivery',tc:'t1',sig:'s1',sl:'Pressure',w:3,
+ q:'Is the team consistently delivering sprint commitments — and is any slippage being proactively managed?',
+ h:'Pattern and communication matter more than perfection. One slip that was communicated early and recovered is healthy. Consistent slippage that is not being discussed = the team has normalised missing commitments. Ask: does the PM tell stakeholders about slippage before they notice it, or after?',
+ o:['Delivering on time consistently — any slippage is communicated early and recovered within same sprint','Mostly on time — 1 slip in last month, PM communicated it proactively before stakeholders noticed','Slipping 2-3 times without proactive communication — stakeholders finding out after the fact','Consistently missing commitments — slippage has become the new normal and no one is actively fixing it'],
+ v:['g','y','a','r'],
+ amp:[{sid:'p4',val:'r',bonus:2,msg:'Fresh unplanned scope added AND delivery already slipping — the team has more work and is already behind. Go-live date is broken.'},{sid:'p7',val:'r',bonus:1,msg:'Resource crunch AND delivery slipping — cause is known. Without leadership fixing bandwidth, slippage continues every sprint.'},{sid:'p5',val:'r',bonus:1,msg:'Data feeds missing AND delivery slipping — team cannot build or test. Both pipelines broken simultaneously.'}],
+ mit:[{sid:'p13',val:'g',reduce:1,msg:'UAT is formally confirmed with client resources — a confirmed UAT absorbs minor delivery buffer without jeopardising go-live.'}],
+ why:'Silent slippage is always more dangerous than communicated slippage. A PM who tells stakeholders proactively has maintained trust; one who does not has compounded the problem.'},
+
+{id:'p3',grp:'Build & requirements',tag:'Build',tc:'t1',sig:'s1',sl:'Pressure',w:2,
+ q:'What is the primary source of unplanned work — and is the volume increasing?',
+ h:'Source tells you the root cause. Client-driven unplanned work = scope discipline problem. Internal rework = quality problem. Both at once = the project has no stable foundation. Volume trend matters: stable = manageable, increasing = sprint capacity eroding.',
+ o:['Minimal unplanned work — team is building net-new planned features each sprint','Some unplanned work but it is either absorbed easily or being actively managed with a fix in place','Client-driven additions OR internal rework consuming 20-30% of sprint — source is clear, fix is not yet in place','Both client-driven additions AND internal rework — team is overwhelmed from both directions, no stable sprint'],
+ v:['g','g','a','r'],
+ amp:[{sid:'p1',val:'r',bonus:1,msg:'Requirements unstable AND high unplanned work — team builds wrong things and then reworks them. Double waste every sprint.'},{sid:'p7',val:'r',bonus:1,msg:'Resource crunch AND high unplanned work — less capacity and more interruptions simultaneously. Sprint delivery will collapse.'}],
+ mit:[{sid:'p2',val:'g',reduce:1,msg:'Delivery is consistently on time — the team is absorbing unplanned work without it derailing commitments.'}],
+ why:'The source of unplanned work tells you who needs to act. Client-driven = PM/CSM must enforce a CR process. Internal rework = engineering lead must fix the quality gate.'},
+
+{id:'p4',grp:'Build & requirements',tag:'Scope',tc:'t1',sig:'s1',sl:'Pressure',w:3,
+ q:'Has there been any scope change — and how is it being handled right now?',
+ h:'Context is everything. An old scope change fully managed and reflected in the plan = no risk. A fresh change with no plan and no communication = the highest risk. Answer based on CURRENT state, not just whether a change happened.',
+ o:['No scope change, OR any past change is fully documented and managed with no hidden timeline impact','Recent scope change but it has been formally assessed, client is aware, and plan is being updated','Recent scope change with real work added — team is aware but formal timeline adjustment has not happened yet','Fresh major scope change — significant new work, no assessment, no communication to client, team absorbing silently'],
+ v:['g','g','a','r'],
+ amp:[{sid:'p2',val:'r',bonus:2,msg:'Fresh scope added AND delivery already slipping — more work on a team already behind. Go-live date is mathematically broken.'},{sid:'p16',val:'r',bonus:1,msg:'No agreed go-live date AND scope is changing — nothing anchoring scope or timeline.'}],
+ mit:[{sid:'p8',val:'g',reduce:1,msg:'Client is engaged and aligned on the change — managed scope evolution with an active client is healthy, not risky.'}],
+ why:'A managed, documented scope change with stakeholder awareness is not a risk. A silent unplanned addition with no timeline adjustment is a hidden deadline breach.'},
+
+{id:'p4b',grp:'Build & requirements',tag:'CSAT',tc:'t4',sig:'s4',sl:'Cloud cover',w:4,
+ q:'What was the formal CSAT score or documented client satisfaction feedback from the last quarter?',
+ h:'Use official score only. No formal score = use most recent documented written feedback. Do not use gut feel. No documentation = choose the last option.',
+ o:['4 to 5 out of 5 — formally high satisfaction or very positive documented written feedback','3 to 4 out of 5 — acceptable, some improvement areas noted in writing, overall positive','2 to 3 out of 5 — concerning, client has formally documented quality or delivery issues','Below 2, no score collected, or client refused to engage on satisfaction at all'],
+ v:['g','y','a','r'],
+ amp:[{sid:'p9',val:'r',bonus:1,msg:'Client unresponsive AND low CSAT on record — formal dissatisfaction + communication breakdown. Pre-live sign-off will be very difficult.'},{sid:'p8',val:'r',bonus:1,msg:'Client disengaged in calls AND poor CSAT on record — both behavioural and documented signals confirm the relationship is at risk.'}],
+ mit:[{sid:'p8',val:'g',reduce:1,msg:'Client is actively engaged — positive engagement makes a lower CSAT a recoverable situation if acted on quickly.'}],
+ why:'Formal CSAT in pre-live predicts whether the client will actively support UAT and go-live sign-off. A client with poor CSAT on record will be a difficult UAT partner.'},
+
+{id:'p4c',grp:'Build & requirements',tag:'People',tc:'t2',sig:'s2',sl:'Humidity',w:3,
+ q:'If your single most critical team member left tomorrow — what would realistically happen to this project?',
+ h:'Think about the one person whose undocumented knowledge, relationships, or critical-path work would be hardest to replace. Also consider: are they at risk? Overloaded, disengaged, or already mentally checked out?',
+ o:['No single point of failure — knowledge is distributed, documented, any gap coverable within 1 sprint','One key person exists but their knowledge is partially documented and someone could step in within 2 sprints','One key person holds critical undocumented knowledge — their absence would delay go-live by several weeks','One key person owns undocumented critical-path work AND shows signs of disengagement or is at risk of leaving'],
+ v:['g','y','a','r'],
+ amp:[{sid:'p2',val:'r',bonus:2,msg:'Delivery already slipping AND key person at risk — losing this person now would make recovery nearly impossible before go-live.'},{sid:'p7',val:'r',bonus:1,msg:'Resource crunch AND key person at risk — team is already thin. Losing the most critical person would be catastrophic for go-live.'}],
+ mit:[{sid:'p2',val:'g',reduce:1,msg:'Delivery is on track — a healthy, well-paced project can absorb a key person departure more manageably.'}],
+ why:'Key person risk is invisible until it triggers. The risk is highest when knowledge is undocumented, the project is under pressure, and the person is already showing signs of disengagement.'},
+
+/* ── SIGNAL 7 — DATA FEEDS ── */
+{id:'p5',grp:'Data & dependencies',tag:'Data',tc:'t2',sig:'s2',sl:'Humidity',w:3,
+ q:'Are client data feeds available for development and testing — and if not, is there a formal escalation with a deadline?',
+ h:'Two separate questions matter here: (1) Are the feeds available? (2) If not, is there a formal escalation with a deadline — not just a follow-up email? A feed that is missing but has a formal written escalation with a client deadline is less dangerous than one being chased informally.',
+ o:['All required feeds available and usable for build and testing — no gaps','1 feed missing but a formal written escalation has been sent to client with a stated deadline and impact','1-2 feeds missing and only being chased informally — no formal escalation, no deadline stated to client','Multiple feeds missing with no escalation, or client unresponsive to escalation — team testing on assumptions'],
+ v:['g','y','a','r'],
+ amp:[{sid:'p2',val:'r',bonus:2,msg:'Data feeds missing AND delivery slipping — team cannot build or test. Both pipelines broken. Go-live is at serious risk.'},{sid:'p9',val:'r',bonus:1,msg:'Client unresponsive AND data feeds missing — escalation is blocked. The client who owns the feeds is also not responding to requests.'}],
+ mit:[{sid:'p8',val:'g',reduce:1,msg:'Client is engaged and responsive — a missing feed is recoverable when the client is actively working with the team.'}],
+ why:'A formally escalated feed delay with a deadline creates accountability. An informally chased feed delay creates indefinite slippage with no one responsible.'},
+
+{id:'p6',grp:'Data & dependencies',tag:'Teams',tc:'t2',sig:'s2',sl:'Humidity',w:2,
+ q:'Are internal dependent teams (EMPI, DB, ACL, Product) unblocking on time — and is any delay systemic or situational?',
+ h:'Is it the SAME team blocking sprint after sprint (systemic — needs leadership escalation) or different teams blocking occasionally (situational — PM follow-up usually resolves it)?',
+ o:['All teams responsive — dependencies resolved within 1-2 days, no recurring patterns','Occasional delays from one or more teams — situational, being resolved, not a recurring pattern','One specific team is consistently the blocker sprint after sprint — systemic, needs CSD or engineering leadership escalation','Multiple teams delayed simultaneously — dependencies blocking from multiple directions at once'],
+ v:['g','y','a','r'],
+ amp:[{sid:'p7',val:'r',bonus:1,msg:'Resource crunch AND dependency delays — team is understaffed and also waiting on others. Sprint capacity eroded from both sides simultaneously.'},{sid:'p2',val:'r',bonus:1,msg:'Delivery already slipping AND internal teams slow — the systemic delay has likely already contributed to the slippage.'}],
+ mit:[{sid:'p14',val:'g',reduce:1,msg:'PM governance is strong — active structured escalation processes resolve dependency issues faster than informal chasing.'}],
+ why:'A situational blocker is a PM problem. A systemic blocker is a leadership problem. Escalating a systemic blocker to the PM level means it will repeat every sprint forever.'},
+
+{id:'p7',grp:'Data & dependencies',tag:'Teams',tc:'t2',sig:'s2',sl:'Humidity',w:2,
+ q:'Is there a resource crunch — and is it temporary (known end date) or structural (always the case)?',
+ h:'Temporary crunch = manageable with sprint adjustment. Structural crunch = will never self-correct. Only leadership can fix structural crunch by removing a project.',
+ o:['No crunch — team has focused capacity adequate for this project','Temporary pressure — specific person on leave or short-term spike, known end date within 1-2 sprints','Structural overload — team is always on too many projects, this is not temporary, needs a leadership decision','Critical structural crunch causing visible output degradation — team cannot deliver and support simultaneously'],
+ v:['g','y','a','r'],
+ amp:[{sid:'p2',val:'r',bonus:2,msg:'Structural resource crunch AND delivery already slipping — the cause of slippage is clear. Sprint planning cannot fix this, only leadership can.'},{sid:'p3',val:'r',bonus:1,msg:'Structural crunch AND high unplanned work — team has shrinking capacity and growing interruptions every sprint.'}],
+ mit:[{sid:'p2',val:'g',reduce:1,msg:'Delivery is on track despite the crunch — the team is managing well within constraints.'}],
+ why:'Structural resource crunch never self-corrects through sprint planning. It requires a leadership decision to remove a competing project. Treating it as a sprint problem is the most common mistake.'},
+
+{id:'p8',grp:'Client alignment',tag:'Client',tc:'t3',sig:'s3',sl:'Wind',w:5,
+ q:'Has client sentiment CHANGED from their recent baseline — and in which direction?',
+ h:'This is a trend signal, not a state signal. A normally demanding client being demanding is not a signal. A normally collaborative client becoming transactional is a critical signal.',
+ o:['Same as or better than their baseline — consistent positive engagement or normal for this client','Slightly more transactional than their baseline — still professional but noticeably less engaged than 4 weeks ago','Noticeably more tense or demanding than their baseline — this is a change, not just their personality','Clearly worse than any recent baseline — frustration, challenge, or disengagement visible in last 2+ calls'],
+ v:['g','y','a','r'],
+ amp:[{sid:'p9',val:'r',bonus:1,msg:'Client tone worsening AND becoming unresponsive — both relationship signals declining together. UAT and sign-off are both at risk.'},{sid:'p16',val:'r',bonus:1,msg:'No agreed go-live date AND client tone worsening — no shared destination and the relationship is deteriorating.'}],
+ mit:[{sid:'p16',val:'g',reduce:1,msg:'Go-live date is formally agreed — a committed shared milestone provides accountability even when tone fluctuates.'}],
+ why:'The CHANGE from baseline is the signal. A client who is always difficult being difficult tells you nothing. A client who was enthusiastic becoming transactional tells you everything.'},
+
+{id:'p9',grp:'Client alignment',tag:'Client',tc:'t3',sig:'s3',sl:'Wind',w:3,
+ q:'Is client response time getting faster, staying the same, or getting slower — what is the trend over the last 3 sprints?',
+ h:'Trend matters far more than current speed. A client who takes 3 days but has always taken 3 days = stable, no signal. A client who took 1 day 6 weeks ago and now takes 4 days = disengagement forming.',
+ o:['Same speed or faster than 3 sprints ago — trend is stable or improving','Very slightly slower but within normal variance — no meaningful trend change','Measurably slower than 3 sprints ago — a clear trend of increasing delay is forming','Significantly slower than their historical pattern, or selectively unresponsive on specific topics'],
+ v:['g','y','a','r'],
+ amp:[{sid:'p1',val:'r',bonus:2,msg:'Client unresponsive AND requirements unclear — the only way to get clarity on what to build is blocked. Critical combination.'},{sid:'p5',val:'r',bonus:1,msg:'Client unresponsive AND data feeds missing — escalation is blocked on both fronts at once.'},{sid:'p8',val:'r',bonus:1,msg:'Client tone worsening AND response time increasing — both relationship signals moving negative simultaneously.'}],
+ mit:[{sid:'p8',val:'g',reduce:1,msg:'Client tone is positive — slower responses may just be bandwidth, not disengagement.'}],
+ why:'Slowing response trend in pre-live predicts go-live sign-off problems. The client who takes 5 days to respond during build will take 2 weeks to sign off UAT.'},
+
+{id:'p10',grp:'Client alignment',tag:'Client',tc:'t3',sig:'s3',sl:'Wind',w:2,
+ q:'How often does the client change agreed requirements — and is there a formal CR process managing the impact?',
+ h:'Frequent changes WITH a CR process = manageable. Frequent changes WITHOUT a CR process = unlimited open-ended commitment.',
+ o:['Rare changes and scope stays stable once agreed — or changes exist but formal CR process manages them well','Occasional changes happening but a CR process is in place and client understands timeline impact','Regular changes (1-2 per month) with no CR process — being absorbed without documenting impact','Frequent changes weekly or monthly with no process — team cannot reach a stable build state'],
+ v:['g','y','a','r'],
+ amp:[{sid:'p2',val:'r',bonus:2,msg:'Delivery slipping AND frequent unmanaged changes — less capacity and more new demands arriving constantly. Go-live on current trajectory is impossible.'},{sid:'p16',val:'r',bonus:1,msg:'No agreed go-live date AND frequent changes — nothing is anchoring the project. Scope and timeline are both undefined.'}],
+ mit:[{sid:'p8',val:'g',reduce:1,msg:'Client is engaged and collaborative — an active client making changes is invested. The risk is the lack of a process, not the client behaviour.'}],
+ why:'No CR process = the client believes all changes are instant and free. With no cost signal, volume never decreases.'},
+
+{id:'p11',grp:'Client alignment',tag:'Client',tc:'t3',sig:'s3',sl:'Wind',w:1,
+ q:'Are unplanned topics appearing in meetings — and are they new discoveries or the same issues resurfacing?',
+ h:'New unplanned topics = discovery (normal in pre-live). Same unplanned topics recurring = systemic (problems are not being resolved between meetings).',
+ o:['Rare unplanned topics — meetings follow agenda and decisions are made','Occasional new unplanned topics — new discoveries, handled quickly, not recurring','Same topics resurfacing across multiple meetings — issues discussed but not resolved between calls','Meetings completely dominated by unplanned crises — same problems every week, no agenda progress'],
+ v:['g','y','a','r'],
+ amp:[{sid:'p8',val:'r',bonus:1,msg:'Client tone worsening AND recurring unresolved meeting topics — the relationship is deteriorating and problems are not being solved.'},{sid:'p14',val:'r',bonus:1,msg:'PM reactive AND recurring meeting topics — the PM has no bandwidth to resolve issues between calls, so they surface again every meeting.'}],
+ mit:[{sid:'p14',val:'g',reduce:1,msg:'PM governance is strong — a proactive PM resolves issues between meetings so they do not recur in the next call.'}],
+ why:'Recurring same topics across meetings means the PM is managing symptoms in calls rather than fixing root causes between them.'},
+
+{id:'p12',grp:'Quality & UAT',tag:'Quality',tc:'t4',sig:'s4',sl:'Cloud cover',w:2,
+ q:'Are bugs growing — and are any recurring in the same area, suggesting the root cause was never fixed?',
+ h:'Two dimensions: volume trend (growing backlog = capacity problem) and recurrence pattern (same area recurring = root cause unfixed).',
+ o:['Backlog stable or shrinking — no recurring patterns, bugs in different areas each sprint','Roughly balanced — equal bugs in and out, but watching for any area-specific clustering','Backlog slowly growing OR same component has bugs appearing repeatedly (root cause not fixed)','Backlog growing fast AND/OR critical path features generating repeated bugs — quality is deteriorating'],
+ v:['g','y','a','r'],
+ amp:[{sid:'p13',val:'r',bonus:2,msg:'Bug backlog growing AND no UAT planned — quality is deteriorating with no gate to catch it before go-live.'},{sid:'p7',val:'r',bonus:1,msg:'Resource crunch AND bugs growing — there is no capacity to fix the accumulating backlog before go-live.'}],
+ mit:[{sid:'p13',val:'g',reduce:1,msg:'UAT is formally confirmed — a real UAT cycle will surface and address the bug backlog before go-live.'}],
+ why:'Recurring bugs in the same component are a stronger Red signal than a growing overall backlog. They indicate a structural issue that individual bug fixes cannot solve.'},
+
+{id:'p13',grp:'Quality & UAT',tag:'UAT',tc:'t4',sig:'s4',sl:'Cloud cover',w:3,
+ q:'How real is the UAT commitment — named client resources, confirmed date in calendar, or just verbal agreement?',
+ h:'A named client person with a date in their calendar = real commitment. "The client said yes in a meeting" = intention, not commitment.',
+ o:['Named client resources confirmed, UAT date is in their calendar, and it is before the go-live date','Verbal commitment with specific names discussed — not yet formally scheduled but concrete enough','Client has said yes to UAT in principle but has not discussed resources or date specifically','UAT has not been discussed, or client has been avoiding the topic when raised'],
+ v:['g','y','a','r'],
+ amp:[{sid:'p12',val:'r',bonus:2,msg:'Bug backlog growing AND no real UAT commitment — quality is deteriorating with no plan to find or fix issues before go-live.'},{sid:'p9',val:'r',bonus:1,msg:'Client unresponsive AND UAT not confirmed — getting real UAT commitment from an unresponsive client is extremely difficult.'},{sid:'p16',val:'r',bonus:1,msg:'No agreed go-live date AND no UAT planned — the project has no quality gate and no destination.'}],
+ mit:[{sid:'p8',val:'g',reduce:1,msg:'Client is actively engaged — converting verbal UAT agreement to formal commitment is much easier with an engaged client.'}],
+ why:'Verbal UAT agreement is not UAT commitment. The strength of UAT commitment is the most reliable predictor of whether go-live will have client-side surprises.'},
+
+{id:'p14',grp:'Governance',tag:'Governance',tc:'t5',sig:'s5',sl:'Convergence',w:2,
+ q:'Is the PM\'s time shifting toward reactive firefighting — and has this been getting worse over the last 3-4 weeks?',
+ h:'A PM who was mostly proactive 4 weeks ago and is now mostly reactive = the project is pulling the PM into crisis mode.',
+ o:['Mostly planned — reactive work under 20% and this has been stable or improving over last month','Balanced but was more proactive 4-6 weeks ago — a slight drift toward reactive is visible','Mostly reactive for 2+ sprints now — firefighting is consuming governance time, and it is getting worse','Entirely reactive — PM is in perpetual crisis mode, no governance meetings, no proactive risk review'],
+ v:['g','y','a','r'],
+ amp:[{sid:'p15',val:'r',bonus:2,msg:'PM reactive AND stale risks — nobody is managing the risks that will become the actual go-live blockers.'},{sid:'p11',val:'r',bonus:1,msg:'PM reactive AND recurring meeting topics — PM cannot resolve issues between calls because there is no bandwidth to do so.'}],
+ mit:[{sid:'p15',val:'g',reduce:1,msg:'Risk register is current and clean — even a busy reactive PM is less of a risk when known risks are actively being managed.'}],
+ why:'A PM whose week is being planned by the project rather than by the PM has lost governance control.'},
+
+{id:'p15',grp:'Governance',tag:'Governance',tc:'t5',sig:'s5',sl:'Convergence',w:3,
+ q:'Are there stale unresolved risks in the register — and are any of them HIGH impact if they activate?',
+ h:'High-impact stale risks = sleeping time bombs. Ask: if the riskiest stale item activated tomorrow, what would happen?',
+ o:['No stale risks, or only low-impact items with no realistic path to activation','1 medium-impact risk open 2+ weeks but a named owner is making documented progress','1 high-impact risk open 2+ weeks with no mitigation progress — could cause serious delay if activated','Multiple high-impact risks with no owners making progress — sleeping time bombs across the project'],
+ v:['g','y','a','r'],
+ amp:[{sid:'p14',val:'r',bonus:2,msg:'PM reactive AND stale high-impact risks — nobody has bandwidth to manage the risks that will become go-live blockers.'},{sid:'p2',val:'r',bonus:1,msg:'Delivery slipping AND stale risks — project is both behind schedule and carrying unmitigated known threats.'}],
+ mit:[{sid:'p14',val:'g',reduce:1,msg:'PM governance is proactive — a well-run PM actively works risks between governance meetings.'}],
+ why:'A high-impact risk that has been stale for 2+ weeks is not being managed — it is being hoped away. Hope is not a mitigation strategy.'},
+
+{id:'p16',grp:'Governance',tag:'Governance',tc:'t5',sig:'s5',sl:'Convergence',w:4,
+ q:'Is there an agreed go-live date — and is the current pace of delivery actually consistent with hitting it?',
+ h:'Two questions: (1) Is the date confirmed by both sides? (2) Is the math realistic? A date that exists on paper but is mathematically impossible given current progress is worse than no date.',
+ o:['Date confirmed by both sides and current delivery pace makes it mathematically achievable','Date confirmed but current pace requires moderate acceleration — tight but realistic with focused effort','Date exists but at current pace it is mathematically impossible — re-baseline conversation has not happened yet','No confirmed date, or the date keeps moving, or client and team are not aligned on the same date'],
+ v:['g','y','a','r'],
+ amp:[{sid:'p4',val:'r',bonus:1,msg:'Fresh scope added AND no realistic go-live date — scope and timeline are both undefined. The project has no destination.'},{sid:'p8',val:'r',bonus:1,msg:'Client disengaged AND go-live date not aligned — no sponsor pushing toward the date and the relationship is deteriorating.'}],
+ mit:[{sid:'p8',val:'g',reduce:1,msg:'Client is actively engaged — an engaged client makes re-baseline conversations achievable rather than confrontational.'}],
+ why:'A go-live date that exists but is mathematically impossible is actively harmful — it delays the re-baseline conversation and lets everyone pretend the plan is still valid.'}
+],
+
+l:[
+{id:'l1',grp:'Platform & delivery health',tag:'Platform',tc:'t1',sig:'s1',sl:'Pressure',w:3,
+ q:'Is the live platform getting more stable, staying the same, or getting worse over the last month?',
+ h:'Trend matters far more than current state. Count: how many client-visible issues this sprint vs last sprint vs the sprint before? The direction of that line is the signal.',
+ o:['Stable and improving — fewer client-visible issues this sprint than last, trend clearly positive','Stable but flat — issues not increasing, not decreasing, platform at an acceptable steady state','Slightly worsening trend — marginally more issues this sprint than last, two sprints in a row','Clearly deteriorating — each sprint has more client-visible issues than the previous one'],
+ v:['g','y','a','r'],
+ amp:[{sid:'l8',val:'r',bonus:2,msg:'Platform deteriorating AND client unhappy — client is watching quality decline in real time. Formal escalation is very close.'},{sid:'l5',val:'r',bonus:1,msg:'Data feeds failing AND platform unstable — client sees wrong data in a deteriorating platform. Two visible failures at once.'}],
+ mit:[{sid:'l13',val:'g',reduce:1,msg:'High CSAT — client satisfaction buffer means minor platform issues are not yet materially damaging the relationship.'}],
+ why:'Trend direction is everything on a live platform. Stable-and-recovering = project working. Stable-and-worsening = systemic problem that will eventually become a client crisis.'},
+
+{id:'l2',grp:'Platform & delivery health',tag:'Delivery',tc:'t1',sig:'s1',sl:'Pressure',w:3,
+ q:'Is the team consistently delivering sprint commitments — and is any slippage being proactively communicated before stakeholders notice?',
+ h:'On a live project, the client compares missed deliveries against the instability they are already experiencing. Double visibility amplifies the damage.',
+ o:['Delivering consistently — any slippage communicated early and recovered within same sprint','Mostly on time — 1 slip in last month, PM communicated it proactively before stakeholders noticed','Slipping 2-3 times without proactive communication — stakeholders finding out after the fact','Consistently missing commitments — slippage has become normalised and is not being actively fixed'],
+ v:['g','y','a','r'],
+ amp:[{sid:'l1',val:'r',bonus:1,msg:'Platform deteriorating AND delivery slipping — client sees a worsening platform AND missed commitments simultaneously.'},{sid:'l4',val:'r',bonus:1,msg:'Fresh scope added AND delivery slipping — more new work on a team already behind.'},{sid:'l7',val:'r',bonus:1,msg:'Structural resource crunch AND delivery slipping — the cause is known. Leadership must fix bandwidth.'}],
+ mit:[{sid:'l8',val:'g',reduce:1,msg:'Client relationship is positive — delivery delays are far less damaging when trust and goodwill are intact.'},{sid:'l13',val:'g',reduce:1,msg:'High CSAT — client satisfaction provides a meaningful buffer against minor delivery slippage.'}],
+ why:'On a live project, delivery slippage is doubly visible. Communication before discovery is everything.'},
+
+{id:'l3',grp:'Platform & delivery health',tag:'Delivery',tc:'t1',sig:'s1',sl:'Pressure',w:2,
+ q:'Is unplanned work increasing — and is it being generated by the live platform itself (production issues) or from external requests?',
+ h:'Production-generated unplanned work = the platform is creating its own demand and cannibalising planned delivery. Both at once = planned delivery has effectively stopped.',
+ o:['Mostly planned work — production-generated demand is within an acceptable expected range','Some unplanned work but from known stable sources — absorbed without derailing planned sprint','Production generating more reactive work than planned (platform creating its own demand, trend increasing)','Both production issues AND external unplanned requests — planned delivery has largely stopped'],
+ v:['g','y','a','r'],
+ amp:[{sid:'l1',val:'r',bonus:2,msg:'Platform deteriorating AND unplanned work rising — production is generating crises faster than the team can resolve them. Planned delivery has stopped.'},{sid:'l7',val:'r',bonus:1,msg:'Resource crunch AND rising unplanned work — shrinking capacity meets growing reactive demand. Sprint plans are fiction.'}],
+ mit:[{sid:'l2',val:'g',reduce:1,msg:'Delivery is consistently on time — the team is managing both planned and unplanned work without derailing commitments.'}],
+ why:'Production-generated unplanned work is a self-amplifying problem. A platform generating hotfixes consumes the engineering capacity that could prevent the next hotfix.'},
+
+{id:'l4',grp:'Platform & delivery health',tag:'Scope',tc:'t1',sig:'s1',sl:'Pressure',w:2,
+ q:'Has there been any scope change recently — is it an expansion (upsell signal) or a rework request (dissatisfaction signal)?',
+ h:'New additive features from a happy client = positive signal. Requests to change or redo already-live features = expectations were not met at build stage.',
+ o:['No change, OR any past change is documented, managed, with no hidden timeline impact','Additive expansion or new feature request from a satisfied client — client sees value and wants more','Recent change to already-agreed and already-live features — added rework with no timeline adjustment','Fresh major rework demand on live features — fundamental expectations were not met, no plan to address it'],
+ v:['g','g','a','r'],
+ amp:[{sid:'l2',val:'r',bonus:2,msg:'Rework demanded AND delivery already slipping — more work on a team already behind. Timeline must be renegotiated immediately.'},{sid:'l8',val:'r',bonus:1,msg:'Client unhappy AND pushing for rework — both signals confirm unmet expectations. Formal escalation is forming.'}],
+ mit:[{sid:'l8',val:'g',reduce:1,msg:'Client is happy and requesting expansion — additive scope from a happy client = trust and value, not risk.'},{sid:'l13',val:'g',reduce:1,msg:'High CSAT and requesting new features — upsell interest from a satisfied client is a strong positive momentum signal.'}],
+ why:'Expansion from a happy client and rework from a dissatisfied client look the same in a status report. The client\'s satisfaction level reveals which one it actually is.'},
+
+{id:'l4b',grp:'Platform & delivery health',tag:'CSAT',tc:'t4',sig:'s4',sl:'Cloud cover',w:2,
+ q:'What was the formal CSAT score or documented client satisfaction feedback from the last quarter?',
+ h:'Official score only. Not gut feel. A client who refuses to give feedback = disengagement signal in itself.',
+ o:['4 to 5 out of 5 — formally high satisfaction or very positive documented written feedback','3 to 4 out of 5 — acceptable satisfaction, improvement areas noted in writing, overall positive','2 to 3 out of 5 — concerning, client has formally documented quality or value issues on record','Below 2, no score collected, or client actively refused to provide feedback'],
+ v:['g','y','a','r'],
+ amp:[{sid:'l8',val:'r',bonus:2,msg:'Client unhappy in calls AND low formal CSAT — behavioural and documented signals both confirm dissatisfaction. Escalation is very close.'},{sid:'l1',val:'r',bonus:1,msg:'Platform deteriorating AND poor CSAT — client is experiencing the decline and has already formally recorded dissatisfaction.'}],
+ mit:[{sid:'l1',val:'g',reduce:1,msg:'Platform is stable — a stable live platform is the single biggest driver of high satisfaction scores.'},{sid:'l2',val:'g',reduce:1,msg:'Delivery is consistently on time — consistent delivery is a major driver of client satisfaction on live projects.'}],
+ why:'High CSAT + upsell interest is the strongest risk-reducing combination in this framework.'},
+
+{id:'l4c',grp:'Platform & delivery health',tag:'People',tc:'t2',sig:'s2',sl:'Humidity',w:3,
+ q:'If your single most critical team member left tomorrow — what would the client-visible impact be?',
+ h:'On a live project: not just "would it delay delivery" but "would the client see something break?"',
+ o:['No single point of failure — knowledge distributed, documented, any gap covered within 1 sprint with no client impact','One key person exists but partially documented — 2-sprint gap manageable without major client-visible impact','One person holds critical undocumented knowledge — their absence would cause weeks of delay with client-visible impact','One person owns undocumented critical work AND is showing disengagement signals or known to be at risk of leaving'],
+ v:['g','y','a','r'],
+ amp:[{sid:'l2',val:'r',bonus:2,msg:'Delivery already slipping AND key person at risk — losing this person now makes recovery nearly impossible.'},{sid:'l7',val:'r',bonus:1,msg:'Resource crunch AND key person at risk — already thin team losing its most critical member would be catastrophic.'},{sid:'l1',val:'r',bonus:1,msg:'Platform deteriorating AND key person at risk — the person who can fix the instability may be about to leave.'}],
+ mit:[{sid:'l2',val:'g',reduce:1,msg:'Delivery is healthy and on track — a well-paced project can absorb a key person departure more manageably.'}],
+ why:'On a live project, key person departure = immediate client-visible impact.'},
+
+{id:'l5',grp:'Data & dependencies',tag:'Data',tc:'t2',sig:'s2',sl:'Humidity',w:3,
+ q:'Are live data feeds healthy — and if any are failing, is the root cause on our side or client side, and is there a formal escalation?',
+ h:'Three dimensions: (1) Are feeds healthy? (2) Whose pipeline is failing? (3) Is there a formal escalation with a deadline, or just informal follow-up?',
+ o:['All feeds healthy, processing correctly, no client-visible data gaps','One feed occasionally delayed but within agreed SLA and client has not noticed any data gap','Client-side feed failing with formal written escalation sent and deadline stated, or our pipeline issue being actively fixed','Feeds failing (client-side or ours) with only informal follow-up — client can see data gaps and no deadline has been given'],
+ v:['g','y','a','r'],
+ amp:[{sid:'l1',val:'r',bonus:2,msg:'Platform unstable AND data feeds failing — client sees a broken platform AND wrong data simultaneously.'},{sid:'l8',val:'r',bonus:1,msg:'Client unhappy AND data feeds failing — the client can directly point to the missing data as the cause of their dissatisfaction.'},{sid:'l9',val:'r',bonus:1,msg:'Client unresponsive AND their data feeds are failing — the client who should fix their feeds is also not responding to escalation.'}],
+ mit:[{sid:'l8',val:'g',reduce:1,msg:'Client is happy despite the data issue — they may not have noticed or it is not impacting their clinical workflows significantly.'}],
+ why:'A formally escalated feed failure with a deadline creates accountability and a paper trail. An informally chased failure creates indefinite delay with no one responsible.'},
+
+{id:'l6',grp:'Data & dependencies',tag:'Teams',tc:'t2',sig:'s2',sl:'Humidity',w:2,
+ q:'Are internal dependent teams responsive — and is any delay from the same team repeatedly (systemic) or varying teams (situational)?',
+ h:'One team blocking every sprint = systemic, needs CSD or engineering leadership. Different teams occasionally = situational, PM follow-up works.',
+ o:['All teams responsive — dependencies resolved within 1-2 days, no recurring patterns','Occasional delays — different teams occasionally, situational, PM follow-up resolves it','One specific team is consistently the bottleneck sprint after sprint — systemic, needs leadership escalation not PM chasing','Multiple teams delayed simultaneously — dependencies blocking from multiple directions at once'],
+ v:['g','y','a','r'],
+ amp:[{sid:'l1',val:'r',bonus:2,msg:'Platform deteriorating AND internal teams slow — the people who could fix the instability are not responding.'},{sid:'l7',val:'r',bonus:1,msg:'Resource crunch AND internal dependency delays — understaffed and also waiting on others. Double bottleneck with client-visible impact.'}],
+ mit:[{sid:'l14',val:'g',reduce:1,msg:'PM governance is strong — structured escalation processes resolve internal dependencies faster than informal chasing.'}],
+ why:'A systemic internal blocker will repeat every sprint until it is escalated to leadership. PM-level follow-up is the wrong tool for a leadership-level problem.'},
+
+{id:'l7',grp:'Data & dependencies',tag:'Teams',tc:'t2',sig:'s2',sl:'Humidity',w:2,
+ q:'Is there a resource crunch — and is it temporary (known end date) or structural (always the case for this team)?',
+ h:'On a live project, structural resource crunch means both production support AND new delivery suffer simultaneously. The client sees both.',
+ o:['No crunch — adequate capacity for both production support and new delivery','Temporary pressure — specific bandwidth constraint with a known end date within 1-2 sprints','Structural overload — team is always on too many projects, this is the persistent state, needs leadership to remove a project','Critical structural crunch — cannot adequately support live platform and deliver new work simultaneously'],
+ v:['g','y','a','r'],
+ amp:[{sid:'l1',val:'r',bonus:2,msg:'Platform deteriorating AND structural crunch — team cannot fix production issues fast enough while also delivering. Leadership must intervene.'},{sid:'l3',val:'r',bonus:1,msg:'Production-generated reactive work rising AND structural crunch — capacity is shrinking while demand grows.'}],
+ mit:[{sid:'l2',val:'g',reduce:1,msg:'Delivery is on track despite the crunch — team is managing both production and delivery within constraints.'}],
+ why:'Structural resource crunch on a live project = client sees slower fixes AND slower new features simultaneously.'},
+
+{id:'l8',grp:'Client relationship',tag:'Client',tc:'t3',sig:'s3',sl:'Wind',w:3,
+ q:'Has client sentiment CHANGED from their recent baseline — in which direction, and how fast?',
+ h:'Rate of change matters: gradual shift over 6 weeks = early warning. Shift in last 2 calls = urgent. Positive signals (upsell, praising team) are as important to note as negative ones.',
+ o:['Same as or better than their baseline — positive engagement consistent or improving, or upsell interest visible','Slightly more transactional than their recent baseline — still professional but less warm than 4-6 weeks ago','Noticeably more tense or challenging than their baseline — a real shift, not just their personality','Clearly worse than any recent baseline — frustration, formal challenge, or active disengagement visible'],
+ v:['g','y','a','r'],
+ amp:[{sid:'l1',val:'r',bonus:2,msg:'Platform deteriorating AND client sentiment worsening — client is connecting the platform quality to their dissatisfaction. Formal escalation is very close.'},{sid:'l5',val:'r',bonus:1,msg:'Data feeds failing AND client sentiment worsening — client can see exactly what is wrong and is becoming unhappy about it.'},{sid:'l9',val:'r',bonus:1,msg:'Sentiment worsening AND response time increasing — both relationship signals declining together.'}],
+ mit:[{sid:'l13',val:'g',reduce:1,msg:'Strong CSAT on record — formal satisfaction data reinforces the positive sentiment.'},{sid:'l1',val:'g',reduce:1,msg:'Platform is stable and improving — platform quality is the strongest driver of sustained positive sentiment.'}],
+ why:'The rate of sentiment change is the most reliable storm predictor. Upsell interest = strong protective signal.'},
+
+{id:'l9',grp:'Client relationship',tag:'Client',tc:'t3',sig:'s3',sl:'Wind',w:3,
+ q:'Is the client\'s response time trending faster, same, or slower — and are they being selectively slow on specific topics?',
+ h:'Selective unresponsiveness is the most dangerous variant — a client going silent on specific topics is building a case, not just busy.',
+ o:['Same speed or faster — response time stable or improving, no topic-specific avoidance patterns','Slightly slower overall but consistent across all topics — likely bandwidth, not avoidance','Measurably slower trend over last 3 sprints — clear deterioration from their historical response pattern','Selectively slow or silent on specific topics (contracts, UAT, specific issues) — deliberate avoidance signal'],
+ v:['g','y','a','r'],
+ amp:[{sid:'l5',val:'r',bonus:2,msg:'Data feeds failing AND client selectively unresponsive — the client who owns the broken feeds is avoiding the conversation about fixing them.'},{sid:'l8',val:'r',bonus:1,msg:'Sentiment worsening AND response time slowing — both relationship signals declining together.'}],
+ mit:[{sid:'l8',val:'g',reduce:1,msg:'Client tone is positive — slower responses are likely bandwidth, not disengagement, when the relationship is strong.'},{sid:'l13',val:'g',reduce:1,msg:'High CSAT — a satisfied but occasionally slow client is very different from a dissatisfied client avoiding difficult conversations.'}],
+ why:'Selective topic avoidance is more dangerous than general slowness. When a client goes quiet on specific topics they are building a case, not just busy.'},
+
+{id:'l10',grp:'Client relationship',tag:'Client',tc:'t3',sig:'s3',sl:'Wind',w:2,
+ q:'What type of changes is the client requesting — additive expansion, or rework of features they did not get right the first time?',
+ h:'The ratio of additive to corrective requests is a proxy for client satisfaction that appears before CSAT is formally collected.',
+ o:['Requests are all additive — new features, expansions, or enhancements on top of working features','Mostly additive with minor correction requests — client is satisfied overall but has small refinements','Roughly equal additive and corrective — some genuine dissatisfaction with existing features mixed with expansion','Primarily corrective — most requests are to fix or rework features that were already built and agreed'],
+ v:['g','y','a','r'],
+ amp:[{sid:'l8',val:'r',bonus:2,msg:'Client unhappy in calls AND primarily corrective change requests — dissatisfaction confirmed in both tone and behaviour.'},{sid:'l2',val:'r',bonus:1,msg:'Delivery slipping AND high corrective demand — less capacity to deliver new work and growing pressure to fix existing work.'}],
+ mit:[{sid:'l8',val:'g',reduce:1,msg:'Client is happy and requests are additive — expansion from a satisfied client is the strongest positive commercial signal.'},{sid:'l13',val:'g',reduce:1,msg:'High CSAT and additive requests — upsell from a satisfied client is a major positive momentum signal.'}],
+ why:'The ratio of additive to corrective requests is a satisfaction proxy that appears in status data before CSAT is formally collected.'},
+
+{id:'l11',grp:'Client relationship',tag:'Client',tc:'t3',sig:'s3',sl:'Wind',w:1,
+ q:'Are unplanned topics in meetings new discoveries — or the same issues resurfacing because they were not resolved between calls?',
+ h:'Recurring same issues = the meeting is the only time anyone works on those problems.',
+ o:['Rare unplanned topics — meetings are decision-focused and structured','Occasional new unplanned topics — production discoveries handled and not recurring in next meeting','Same topics resurfacing across multiple meetings — issues discussed but not resolved between calls','Every meeting dominated by the same crisis topics — no agenda progress, governance has collapsed'],
+ v:['g','y','a','r'],
+ amp:[{sid:'l1',val:'r',bonus:1,msg:'Platform deteriorating AND recurring crisis topics — production is generating issues that appear in every meeting without being resolved.'},{sid:'l14',val:'r',bonus:1,msg:'PM reactive AND recurring meeting topics — PM has no bandwidth between calls to resolve issues, so they resurface every meeting.'}],
+ mit:[{sid:'l14',val:'g',reduce:1,msg:'PM governance is strong — a proactive PM resolves issues between meetings so they do not surface again in the next call.'}],
+ why:'Recurring same meeting topics mean the PM is managing problems in calls instead of between them.'},
+
+{id:'l12',grp:'Quality & bugs',tag:'Quality',tc:'t4',sig:'s4',sl:'Cloud cover',w:2,
+ q:'Are bugs growing — and is any area generating repeated bugs suggesting the root cause was never actually fixed?',
+ h:'A bug closed and reopened in the same component = the fix was cosmetic, not structural. Three bugs in the same module = design or architecture problem.',
+ o:['Backlog stable or shrinking — no recurring component-specific patterns, bugs distributed across areas','Roughly balanced in/out — watching for any area-specific clustering but nothing systematic yet','Backlog slowly growing OR same component generating repeated bugs (root cause not fixed)','Backlog growing fast AND/OR critical features generating repeated bugs — systemic quality failure in at least one area'],
+ v:['g','y','a','r'],
+ amp:[{sid:'l1',val:'r',bonus:2,msg:'Platform deteriorating AND systemic bugs — quality is declining and there are known structural issues not being addressed.'},{sid:'l7',val:'r',bonus:1,msg:'Resource crunch AND bug backlog growing — no capacity to investigate root causes, only band-aid fixes.'},{sid:'l8',val:'r',bonus:1,msg:'Client unhappy AND bug backlog growing — the client is experiencing the quality deterioration and is already dissatisfied.'}],
+ mit:[{sid:'l13',val:'g',reduce:1,msg:'High CSAT — client satisfaction suggests the bugs are not yet materially impacting their clinical workflows.'},{sid:'l7',val:'g',reduce:1,msg:'Team has adequate capacity — sufficient engineering bandwidth to investigate root causes rather than just applying band-aid fixes.'}],
+ why:'A recurring bug in the same component is more dangerous than ten bugs across different areas.'},
+
+{id:'l14',grp:'Governance',tag:'Governance',tc:'t5',sig:'s5',sl:'Convergence',w:2,
+ q:'Is the PM\'s time shifting toward reactive production firefighting — and has this trend been getting worse over the last month?',
+ h:'When production dominates, governance gaps accumulate silently — risk reviews are skipped, client relationships drift, go-forward planning stops.',
+ o:['Mostly planned governance — reactive production demand under 30% and trend is stable or improving','Balanced but was more proactive 4-6 weeks ago — slight drift toward reactive is visible in the trend','Mostly reactive for 2+ sprints now — governance work is being skipped to manage production','Entirely reactive — PM is in perpetual firefighting mode, no proactive governance happening at all'],
+ v:['g','y','a','r'],
+ amp:[{sid:'l15',val:'r',bonus:2,msg:'PM reactive AND stale high-impact risks — nobody has bandwidth to manage risks that will become the next production incident.'},{sid:'l1',val:'r',bonus:1,msg:'Platform deteriorating AND PM reactive — the platform is generating more crises than the PM can govern. Governance has broken down.'}],
+ mit:[{sid:'l15',val:'g',reduce:1,msg:'Risk register is current and clean — even a reactive PM reduces risk when known threats are actively being managed.'}],
+ why:'The trend toward reactive governance is the signal, not today\'s percentage.'},
+
+{id:'l15',grp:'Governance',tag:'Governance',tc:'t5',sig:'s5',sl:'Convergence',w:3,
+ q:'Are there stale unresolved risks — and critically, are any of them HIGH impact if they activate on the live platform?',
+ h:'High-impact stale risk with a named owner not making documented progress = it is being hoped away, not managed.',
+ o:['No stale risks, or only genuinely low-impact items with no realistic activation path','1 medium-impact risk open 2+ weeks but a named owner is making real documented progress','1 high-impact risk open 2+ weeks with no mitigation progress — would cause serious client-visible incident if activated','Multiple high-impact risks with no active owners — sleeping time bombs across the live system'],
+ v:['g','y','a','r'],
+ amp:[{sid:'l14',val:'r',bonus:2,msg:'PM reactive AND stale high-impact risks — nobody has bandwidth to manage the risks that will become the next client-visible incident.'},{sid:'l1',val:'r',bonus:1,msg:'Platform deteriorating AND stale risks — some of those stale risks may already be contributing to current instability.'}],
+ mit:[{sid:'l14',val:'g',reduce:1,msg:'PM governance is proactive — a well-run PM actively works through risks between governance cadences.'}],
+ why:'A high-impact live project risk that has been stale for 2+ weeks is a production incident waiting for a trigger.'},
+
+{id:'l16',grp:'Governance',tag:'Governance',tc:'t5',sig:'s5',sl:'Convergence',w:2,
+ q:'Are requirements for new enhancements genuinely clear before the team builds — and is there a clarification process when they are not?',
+ h:'On a live project, building the wrong thing is immediately visible to real users.',
+ o:['Clear and stable with a reliable clarification process — last several enhancements accepted first time','Usually clear — occasional clarification needed, but the team catches ambiguity before building','Sometimes unclear — team sometimes makes assumptions and builds the wrong thing, leading to rework','Often unclear with no reliable clarification process — team regularly builds wrong enhancements that need rework after client review'],
+ v:['g','y','a','r'],
+ amp:[{sid:'l10',val:'r',bonus:2,msg:'Client requesting rework on existing features AND enhancement requirements unclear — wrong things being built on top of already-wrong things.'},{sid:'l12',val:'r',bonus:1,msg:'Systemic bugs AND unclear requirements — bugs may be structurally caused by building enhancements on wrong assumptions.'}],
+ mit:[{sid:'l9',val:'g',reduce:1,msg:'Client is fast and responsive — quick client responses mean requirement gaps are clarified before the team builds on wrong assumptions.'}],
+ why:'An unclear enhancement requirement on a live system creates a client-visible bug immediately.'}
+]};
+
+/* ═══════════════════════ ENGINE ═══════════════════════ */
+function effW(q){
+  var w=q.w,i,rule,other;
+  for(i=0;i<(q.amp||[]).length;i++){rule=q.amp[i];other=S[rule.sid];if(other===rule.val&&other!=='n')w+=rule.bonus;}
+  for(i=0;i<(q.mit||[]).length;i++){rule=q.mit[i];other=S[rule.sid];if(other===rule.val&&other!=='n')w-=rule.reduce;}
+  return Math.max(1,Math.min(5,w));
+}
+function getCtx(q){
+  var i,rule,other;
+  for(i=0;i<(q.amp||[]).length;i++){rule=q.amp[i];other=S[rule.sid];if(other===rule.val&&other!=='n')return{type:'amp',msg:rule.msg};}
+  for(i=0;i<(q.mit||[]).length;i++){rule=q.mit[i];other=S[rule.sid];if(other===rule.val&&other!=='n')return{type:'mit',msg:rule.msg};}
+  return null;
+}
+function calc(){
+  if(!PH)return{g:0,y:0,a:0,r:0,rf:[],af:[],n:0,tot:0,pct:100,momMsg:'',momType:'neu',override:false};
+  var qs=SIGNALS[PH],g=0,y=0,a=0,r=0,rf=[],af=[],yf=[],gf=[],ws=0,wmax=0,n=0,override=false,i,q,ans,ew;
+  for(i=0;i<qs.length;i++){
+    q=qs[i]; ans=S[q.id]; ew=effW(q);
+    var effectiveAns;
+    if(q.id==='p5'){
+      var bMode=S['p5_mode'];
+      effectiveAns=resolveP5(ans,bMode,bMode==='single'?S['p5_single']:bMode==='phased'?S['p5_phased']:null);
+    } else { effectiveAns=ans; }
+    if(ans===undefined) continue;
+    n++;
+    if(ans==='n') continue;
+    wmax+=ew*3;
+    ws+=ew*SC[effectiveAns];
+    if(effectiveAns==='g'){g++;gf.push(q.q);}
+    else if(effectiveAns==='y'){y++;yf.push(q.q);}
+    else if(effectiveAns==='a'){a++;af.push(q.q);}
+    else{r++;rf.push(q.q);}
+  }
+  var pct=wmax>0?Math.max(0,Math.min(100,Math.round(ws/wmax*100))):100;
+  var momMsg='',momType='neu';
+  if(PH==='l'){
+    var l1=S['l1'],l2=S['l2'],l4b=S['l4b'],l8=S['l8'],l5=S['l5'],l14=S['l14'],l15=S['l15'];
+    if(l8==='g'&&l4b==='g'){momMsg='Client happy + high CSAT = excellent momentum. Storm risk significantly reduced across all signals.';momType='pos';}
+    else if(l8==='g'&&l1==='g'){momMsg='Platform stable + client happy = strong dual positive. Multiple protective signals active.';momType='pos';}
+    else if(l4b==='g'){momMsg='Strong formal CSAT — client sees real value. This reduces the impact of other amber signals.';momType='pos';}
+    if(l8==='r'&&l1==='r'){momMsg='Platform deteriorating + client unhappy = client watching quality decline in real time. Escalate today.';momType='neg';override=true;}
+    else if(l5==='r'&&l8==='r'){momMsg='Data feeds failing + client unhappy = client sees wrong data and is formally dissatisfied.';momType='neg';override=true;}
+    else if(l14==='r'&&l15==='r'){momMsg='PM reactive + stale high-impact risks = governance collapsed. Incidents will compound without intervention.';momType='neg';}
+  } else {
+    var p2=S['p2'],p5=S['p5'],p8=S['p8'],p13=S['p13'],p14=S['p14'],p15=S['p15'],p16=S['p16'];
+    if(p8==='g'&&p16==='g'){momMsg='Client engaged + go-live date formally agreed = strong foundation for a successful launch.';momType='pos';}
+    else if(p13==='g'&&p2==='g'){momMsg='UAT formally confirmed + delivery on track = pre-live well positioned for go-live.';momType='pos';}
+    if(p16==='r'&&p8==='r'){momMsg='No go-live date + disengaged client = no destination and no sponsor steering toward it.';momType='neg';override=true;}
+    else if(p5==='r'&&p2==='r'){momMsg='Data feeds missing + delivery failing = team cannot build OR test. Pre-live in serious trouble.';momType='neg';override=true;}
+    else if(p14==='r'&&p15==='r'){momMsg='PM reactive + stale high-impact risks = go-live will surface problems that should have been caught weeks ago.';momType='neg';}
+  }
+  var naCount=0;for(var k=0;k<qs.length;k++){if(S[qs[k].id]==='n')naCount++;}
+  var grpHealth=getGroupHealth(qs);
+  var clusters=getYellowClusters(qs);
+  var patterns=(n===qs.length-naCount+naCount)?detectPatterns(PH):[];
+  return{g:g,y:y,a:a,r:r,rf:rf,af:af,yf:yf,gf:gf,n:n,tot:qs.length,pct:pct,momMsg:momMsg,momType:momType,override:override,naCount:naCount,grpHealth:grpHealth,clusters:clusters,patterns:patterns};
+}
+function getForecast(c){
+  if(!PH||c.n<c.tot)return null;
+  if(c.naCount===c.tot)
+    return{cls:'b-na',icon:'Assessment not applicable',sub:'All signals have been marked N/A. No scoring has been applied. Review which signals are relevant to this project before generating a forecast.'};
+  var isP=PH==='p';
+  var crit=c.patterns.filter(function(p){return p.sev==='r';});
+  var warn=c.patterns.filter(function(p){return p.sev==='a';});
+  var redGrps=0,ambGrps=0;
+  objVals(c.grpHealth).forEach(function(g){if(g.level==='r')redGrps++;else if(g.level==='a')ambGrps++;});
+  /* Storm imminent: critical pattern OR 2+ red groups OR raw threshold */
+  if(crit.length||c.override||c.r>=4||(c.r>=2&&c.a>=3)||redGrps>=2)
+    return{cls:'b-thunder',icon:'Storm imminent — escalate today',sub:isP?'Critical risk patterns detected. Multiple signals converging toward go-live failure. Escalate to CSD immediately.':'Critical patterns converging on the live system. Escalate to CSD today.'};
+  /* Storm approaching: warning patterns + reds, or group pressure */
+  if(c.r>=2||c.a>=4||(c.r>=1&&c.a>=3)||c.pct<40||(warn.length>=2&&c.r>=1)||(redGrps>=1&&ambGrps>=2))
+    return{cls:'b-storm',icon:'Storm approaching — act this week',sub:isP?'Multiple risk signals building pressure. Without action this week, go-live will slip or launch with serious issues.':'Multiple live signals building pressure. Left unaddressed, this becomes critical within 2-3 sprints.'};
+  /* Overcast: any warning pattern, yellow clusters, early signal pressure */
+  if(c.r>=1||c.a>=2||c.y>=5||c.pct<60||c.clusters.length>=2||warn.length>=1||(c.y>=3&&c.a>=1))
+    return{cls:'b-over',icon:'Overcast forming — monitor closely',sub:isP?'Early warning signals detected. Address these before they compound into go-live blockers.':'Early warnings detected. Act before signals converge into a production crisis.'};
+  return{cls:'b-clear',icon:'Skies clear — project looks healthy',sub:(c.momMsg&&c.momType==='pos'?c.momMsg+' ':'')+( isP?'Pre-live phase is on track. Maintain this cadence through go-live.':'All live signals stable. Continue weekly monitoring.')};
+}
+
+/* ── Signal 7 branch renderer ── */
+function buildP5Branch(mainAns){
+  var bM=S['p5_mode'], bS=S['p5_single'], bP=S['p5_phased'];
+  var ins=p5Insight(mainAns,bM,bM==='single'?bS:bP);
+  var h='<div class="branch-wrap">';
+  h+='<div class="branch-lbl">Feed delivery structure</div>';
+  h+='<div class="branch-mode-q">'+P5B.modeQ+'</div>';
+  h+='<div class="branch-mode-row">';
+
+  var sActive=bM==='single', pActive=bM==='phased';
+  h+='<button class="b-mode-btn'+(sActive?' bm-single':'')+'" onclick="pickB(\'p5_mode\',\'single\')">';
+  h+='<span class="b-mode-lbl '+(sActive?'b-mode-lbl-s':'b-mode-lbl-off')+'">OPTION A — ONE-GO</span>';
+  h+=P5B.single.label;
+  h+='<span style="display:block;font-size:10px;color:'+(sActive?'#0C447C':'#888780')+';margin-top:2px;line-height:1.3">'+P5B.single.desc+'</span>';
+  h+='</button>';
+
+  h+='<button class="b-mode-btn'+(pActive?' bm-phased':'')+'" onclick="pickB(\'p5_mode\',\'phased\')">';
+  h+='<span class="b-mode-lbl '+(pActive?'b-mode-lbl-p':'b-mode-lbl-off')+'">OPTION B — PHASED</span>';
+  h+=P5B.phased.label;
+  h+='<span style="display:block;font-size:10px;color:'+(pActive?'#3C3489':'#888780')+';margin-top:2px;line-height:1.3">'+P5B.phased.desc+'</span>';
+  h+='</button>';
+  h+='</div>';
+
+  if(bM==='single'){
+    var bd=P5B.single;
+    h+='<div class="branch-sub branch-sub-single">';
+    h+='<div class="branch-sub-q">'+bd.getSubQ(mainAns)+'</div>';
+    h+='<div class="branch-sub-h bsh-single">'+bd.getHint(mainAns)+'</div>';
+    h+='<div class="branch-opts">';
+    bd.opts.forEach(function(o){
+      var sel=bS===o.v;
+      h+='<button class="qbtn'+(sel?' sel-'+o.v:bS?' dim':'')+'" onclick="pickB(\'p5_single\',\''+o.v+'\')" style="font-size:11px"><span class="dot"></span>'+o.t+'</button>';
+    });
+    h+='</div></div>';
+  }
+  if(bM==='phased'){
+    var bd2=P5B.phased;
+    h+='<div class="branch-sub branch-sub-phased">';
+    h+='<div class="branch-sub-q">'+bd2.getSubQ(mainAns)+'</div>';
+    h+='<div class="branch-sub-h bsh-phased">'+bd2.getHint(mainAns)+'</div>';
+    h+='<div class="branch-opts">';
+    bd2.opts.forEach(function(o){
+      var sel=bP===o.v;
+      h+='<button class="qbtn'+(sel?' sel-'+o.v:bP?' dim':'')+'" onclick="pickB(\'p5_phased\',\''+o.v+'\')" style="font-size:11px"><span class="dot"></span>'+o.t+'</button>';
+    });
+    h+='</div></div>';
+  }
+
+  if(ins){
+    h+='<div class="ctx-note '+(ins.type==='amp'?'cn-insight-amp':'cn-insight-mit')+'" style="margin-top:8px">';
+    h+='<span style="font-weight:700;flex-shrink:0">'+(ins.type==='amp'?'&#9651; Feed risk:':'&#9651; Feed note:')+'</span>';
+    h+='<span> '+ins.msg+'</span></div>';
+  }
+  h+='</div>';
+  return h;
+}
+
+function setPhase(ph){PH=ph;S={};document.getElementById('pb-p').className='pbtn'+(ph==='p'?' ap':'');document.getElementById('pb-l').className='pbtn'+(ph==='l'?' al':'');render();}
+function pick(id,val){
+  S[id]=val;
+  // if Signal 7 main answer changed to NA, clear branch state
+  if(id==='p5'&&val==='n'){delete S['p5_mode'];delete S['p5_single'];delete S['p5_phased'];}
+  // if Signal 7 mode changed, clear sub-answer
+  if(id==='p5_mode'){delete S['p5_single'];delete S['p5_phased'];}
+  render();
+}
+function pickB(key,val){
+  S[key]=val;
+  if(key==='p5_mode'){delete S['p5_single'];delete S['p5_phased'];}
+  render();
+}
+
+function render(){
+  var c=calc(),hp=!!PH;
+  document.getElementById('pg').style.width=(hp&&c.tot>0?Math.round(c.n/c.tot*100):0)+'%';
+  document.getElementById('ac').textContent=hp?(c.n+' of '+c.tot+' answered'):'Select phase';
+  document.getElementById('dg').textContent=hp?c.g:'—';
+  document.getElementById('dy').textContent=hp?c.y:'—';
+  document.getElementById('da').textContent=hp?c.a:'—';
+  document.getElementById('dr').textContent=hp?c.r:'—';
+  var done=hp&&c.n===c.tot,pct=done?c.pct:null;
+  document.getElementById('ds').textContent=pct!==null?pct+'/100':'—';
+  var bc=done?(pct>=75?'#639922':pct>=60?'#BA7517':pct>=40?'#854F0B':'#A32D2D'):'#378ADD';
+  document.getElementById('pf').style.width=(pct||0)+'%';
+  document.getElementById('pf').style.background=bc;
+  var mom=document.getElementById('mom');
+  if(c.momMsg){mom.className='mom mom-'+(c.momType==='pos'?'pos':'neg');mom.innerHTML='<span style="font-size:14px;flex-shrink:0">'+(c.momType==='pos'?'&#8593;':'&#8595;')+'</span><span>'+c.momMsg+'</span>';}
+  else{mom.className='mom mom-neu';mom.innerHTML='<span style="font-size:14px;flex-shrink:0">&#8212;</span><span>'+(hp?'Context intelligence appears as you answer signals':'Select phase above to begin')+'</span>';}
+  var fc=done?getForecast(c):null,bn=document.getElementById('bn');
+  if(fc){bn.className='banner '+fc.cls;document.getElementById('bnt').textContent=fc.icon;document.getElementById('bns').textContent=fc.sub;}
+  else if(hp){bn.className='banner b-wait';document.getElementById('bnt').textContent='Answer all '+c.tot+' signals to get your forecast';document.getElementById('bns').textContent=PH==='p'?'Signals calibrated for pre-live / staging phase.':'Signals calibrated for a live production project.';}
+  else{bn.className='banner b-wait';document.getElementById('bnt').textContent='Select project phase to load signals';document.getElementById('bns').textContent='Trend direction, root cause, and recovery signals all factor into each score.';}
+
+  var html='';
+  if(!hp){html='<div class="no-phase">Select Pre-Live or Live above to load your signals</div>';}
+  else{
+    var qs=SIGNALS[PH],lastGrp=null;
+    for(var i=0;i<qs.length;i++){
+      var q=qs[i],ans=S[q.id],ew=effW(q),ctx=(ans&&ans!=='n')?getCtx(q):null;
+      // For Signal 7, compute effective answer for card styling
+      var cardAns = ans;
+      if(q.id==='p5'&&ans&&ans!=='n'){
+        cardAns = resolveP5(ans, S['p5_mode'], S['p5_mode']==='single'?S['p5_single']:S['p5_phased']);
+      }
+      var isNA=ans==='n';
+      var cardCls='qcard'+(isNA?' dna':cardAns?' d'+cardAns:'')+(ctx&&ctx.type==='amp'?' amped':ctx&&ctx.type==='mit'?' mited':'');
+      if(q.grp!==lastGrp){html+='<div class="grp-lbl">'+q.grp+'</div>';lastGrp=q.grp;}
+      html+='<div class="'+cardCls+'">';
+      html+='<div class="qmeta"><span class="qnum">Signal '+(i+1)+'</span>';
+      html+='<span class="qtag '+q.tc+'">'+q.tag+'</span>';
+      html+='<span class="sigtag '+q.sig+'">'+q.sl+'</span>';
+      if(!isNA){
+        var wpCls=ew>q.w?'wp-h':ew<q.w?'wp-l':'wp-n';
+        html+='<span class="wpill '+wpCls+'">'+(ew>q.w?'Weight HIGH':ew<q.w?'Weight LOW':'Weight '+ew+'/5')+'</span>';
+      } else {
+        html+='<span class="wpill wp-n" style="margin-left:auto">N/A — excluded</span>';
+      }
+      html+='</div>';
+      html+='<div class="qt">'+q.q+'</div>';
+      if(!isNA) html+='<div class="qh">'+q.h+'</div>';
+      html+='<div class="qbtns">';
+      var vals=['g','y','a','r'];
+      for(var j=0;j<4;j++){
+        var v=vals[j],isSel=(ans===v),isDim=(ans&&!isSel);
+        html+='<button class="qbtn'+(isSel?' sel-'+v:isDim?' dim':'')+'" onclick="pick(\''+q.id+'\',\''+v+'\')">';
+        html+='<span class="dot"></span>'+q.o[j]+'</button>';
+      }
+      // N/A separator + button
+      html+='<div class="na-divider"></div>';
+      html+='<button class="qbtn'+(isNA?' sel-na':ans?' dim':'')+'" onclick="pick(\''+q.id+'\',\'n\')">';
+      html+='<span class="dot"></span>N/A — not applicable to this project right now</button>';
+      html+='</div>';
+
+      // Context note (only if not NA)
+      if(ctx&&!isNA) html+='<div class="ctx-note cn-'+ctx.type+'"><span style="font-weight:700;flex-shrink:0">'+(ctx.type==='amp'?'&#8593; Amplified:':'&#8595; Mitigated:')+'</span><span> '+ctx.msg+'</span></div>';
+
+      // Signal 7 branch — only if pre-live AND answer is not NA
+      if(q.id==='p5'&&ans&&!isNA) html+=buildP5Branch(ans);
+
+      if(!isNA) html+='<div class="why">Why this matters: '+q.why+'</div>';
+      html+='</div>';
+    }
+    if(fc&&done){
+      var GHL={r:'Red',a:'Amber',y:'Yellow',g:'Green'};
+      var GHC={r:'#791F1F',a:'#633806',y:'#854F0B',g:'#27500A'};
+      var GHBG={r:'#FCEBEB',a:'#FAEEDA',y:'#FFFBF0',g:'#EAF3DE'};
+      var GHBC={r:'#F09595',a:'#FAC775',y:'#FAC775',g:'#C0DD97'};
+      var GHBH={r:'#F09595',a:'#EF9F27',y:'#FAC775',g:'#97C459'};
+      var GHHC={r:'#501313',a:'#412402',y:'#412402',g:'#173404'};
+      html+='<div class="res-block">';
+      html+='<div style="font-size:14px;font-weight:700;margin-bottom:12px">Forecast summary</div>';
+
+      /* ── 4 Colour blocks ── */
+      ['r','a','y','g'].forEach(function(col){
+        var list=col==='r'?c.rf:col==='a'?c.af:col==='y'?c.yf:c.gf;
+        var lbl=col==='r'?'Red — immediate action':col==='a'?'Amber — act this week':col==='y'?'Yellow — monitor closely':'Green — on track';
+        var cnt=col==='r'?c.r:col==='a'?c.a:col==='y'?c.y:c.g;
+        var empMsg=col==='r'?'No red signals — clear.':col==='a'?'No amber signals.':col==='y'?'No yellow signals.':'No green signals yet.';
+        html+='<div style="border-radius:10px;border:1px solid '+GHBC[col]+';background:'+GHBG[col]+';overflow:hidden;margin-bottom:8px">';
+        html+='<div style="padding:7px 12px;background:'+GHBH[col]+';display:flex;align-items:center;justify-content:space-between">';
+        html+='<span style="font-size:11px;font-weight:700;color:'+GHHC[col]+';text-transform:uppercase;letter-spacing:.07em">&#9679; '+lbl+'</span>';
+        html+='<span style="font-size:12px;font-weight:700;color:'+GHHC[col]+'">'+cnt+' signal'+(cnt!==1?'s':'')+'</span></div>';
+        if(list&&list.length){list.forEach(function(f){html+='<div style="font-size:12px;padding:5px 12px;border-bottom:1px solid '+GHBC[col]+';color:'+GHC[col]+';line-height:1.4">'+f+'</div>';});}
+        else{html+='<div style="font-size:12px;padding:7px 12px;color:'+GHC[col]+';font-style:italic">'+empMsg+'</div>';}
+        html+='</div>';
+      });
+
+      /* ── Pattern intelligence ── */
+      var critPts=c.patterns.filter(function(p){return p.sev==='r';});
+      var warnPts=c.patterns.filter(function(p){return p.sev==='a';});
+      var goodPts=c.patterns.filter(function(p){return p.sev==='g';});
+      if(c.patterns.length){
+        html+='<div style="margin:12px 0 6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#888780;display:flex;align-items:center;gap:8px">Pattern intelligence<span style="flex:1;height:1px;background:#e0dfd7;display:block"></span></div>';
+        var allPts=critPts.concat(warnPts).concat(goodPts);
+        allPts.forEach(function(p){
+          var bg=p.sev==='r'?'#FCEBEB':p.sev==='a'?'#FAEEDA':'#EAF3DE';
+          var bc=p.sev==='r'?'#F09595':p.sev==='a'?'#FAC775':'#C0DD97';
+          var hbg=p.sev==='r'?'#F09595':p.sev==='a'?'#EF9F27':'#97C459';
+          var htc=p.sev==='r'?'#501313':p.sev==='a'?'#412402':'#173404';
+          var tc=p.sev==='r'?'#791F1F':p.sev==='a'?'#633806':'#27500A';
+          var lbl=p.sev==='r'?'CRITICAL':p.sev==='a'?'WARNING':'POSITIVE';
+          html+='<div style="border-radius:9px;border:1px solid '+bc+';background:'+bg+';overflow:hidden;margin-bottom:6px">';
+          html+='<div style="padding:6px 11px;background:'+hbg+';display:flex;align-items:center;gap:8px">';
+          html+='<span style="font-size:9px;font-weight:700;color:'+htc+';text-transform:uppercase;letter-spacing:.07em;border:1px solid rgba(0,0,0,.12);padding:1px 5px;border-radius:3px">'+lbl+'</span>';
+          html+='<span style="font-size:12px;font-weight:700;color:'+htc+'">'+p.name+'</span>';
+          html+='</div>';
+          html+='<div style="font-size:11px;color:'+tc+';padding:7px 11px;line-height:1.6">'+p.desc+'</div>';
+          html+='</div>';
+        });
+      }
+
+      /* ── Group health grid ── */
+      var gh=c.grpHealth;
+      if(Object.keys(gh).length){
+        html+='<div style="margin:12px 0 6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#888780;display:flex;align-items:center;gap:8px">Group health<span style="flex:1;height:1px;background:#e0dfd7;display:block"></span></div>';
+        html+='<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px">';
+        Object.keys(gh).forEach(function(grp){
+          var lv=gh[grp].level;
+          var d=gh[grp];
+          html+='<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:7px;background:'+GHBG[lv]+';border:1px solid '+GHBC[lv]+'">';
+          html+='<span style="width:9px;height:9px;border-radius:50%;background:'+GHC[lv]+';flex-shrink:0;display:inline-block"></span>';
+          html+='<span style="font-size:12px;font-weight:600;color:'+GHC[lv]+';flex:1">'+grp+'</span>';
+          html+='<span style="font-size:10px;color:'+GHC[lv]+'">';
+          if(d.r)html+='<span style="font-weight:700">'+d.r+'R</span> ';
+          if(d.a)html+=d.a+'A ';
+          if(d.y)html+=d.y+'Y ';
+          if(d.g)html+=d.g+'G';
+          html+='</span>';
+          html+='<span style="font-size:10px;font-weight:700;color:'+GHC[lv]+';background:'+GHBH[lv]+';padding:1px 7px;border-radius:4px">'+GHL[lv]+'</span>';
+          html+='</div>';
+        });
+        html+='</div>';
+      }
+
+      /* ── Yellow cluster warnings ── */
+      if(c.clusters.length){
+        html+='<div style="background:#FFFBF0;border:1px solid #FAC775;border-left:3px solid #BA7517;border-radius:8px;padding:8px 11px;margin-bottom:10px">';
+        html+='<div style="font-size:11px;font-weight:700;color:#633806;margin-bottom:4px">&#9651; Yellow cluster'+(c.clusters.length>1?'s':'')+' detected</div>';
+        c.clusters.forEach(function(cl){
+          html+='<div style="font-size:11px;color:#854F0B;line-height:1.5">'+cl.count+' of '+cl.total+' signals in <strong>'+cl.grp+'</strong> are Yellow — concentrated drift forming in this group. Clusters of Yellows often precede Amber if not addressed this week.</div>';
+        });
+        html+='</div>';
+      }
+
+      /* ── Score bar ── */
+      html+='<div class="pbar-row" style="padding-top:10px;border-top:1px solid #f0efe8">';
+      html+='<span style="font-size:11px;color:#6b6a63;white-space:nowrap">Context-adjusted score</span>';
+      html+='<div class="pbar-track"><div class="pbar-fill" style="width:'+pct+'%;background:'+bc+'"></div></div>';
+      html+='<span style="font-size:14px;font-weight:700;color:#1a1a18">'+pct+'/100</span></div>';
+      html+='</div>';
+    }
+  }
+  document.getElementById('qc').innerHTML=html;
+}
+function init(){PH=null;S={};document.getElementById('pb-p').className='pbtn';document.getElementById('pb-l').className='pbtn';render();}
+init();
+</script>
+</body>
+</html>
